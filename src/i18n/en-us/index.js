@@ -1,7 +1,12 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
-  failed: 'Action failed',
-  success: 'Action was successful'
+  utils: {
+    name: 'Ucon',
+    all: 'all'
+  },
+
+  teacher: 'teacher | teachers',
+  student: 'student | students',
+
+  login: 'sign in',
+  logout: 'sign out'
 }

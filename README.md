@@ -1,6 +1,6 @@
 # Ucon (ucon)
 
-University conversation
+Ucon
 
 ## Install the dependencies
 ```bash

@@ -41,7 +41,8 @@ module.exports = {
     __statics: true,
     process: true,
     Capacitor: true,
-    chrome: true
+    chrome: true,
+    faker: false
   },
 
   // add your custom rules here
@@ -65,6 +66,9 @@ module.exports = {
     // allow debugger during development only
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
 
-    "space-before-function-paren": ["error", "never"]
+    "space-before-function-paren": ["error", "never"],
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": 100,
+    }]
   }
-};
+}

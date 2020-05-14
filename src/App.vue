@@ -5,7 +5,14 @@
 </template>
 
 <script>
+const faker = require('faker')
+window.faker = faker
+
 export default {
-  name: 'App'
+  name: 'App',
+
+  created() {
+    this.$store.dispatch('chats/getUserChats')
+  }
 }
 </script>

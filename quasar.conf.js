@@ -7,7 +7,11 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 /* eslint-env node */
 
-module.exports = function(/* ctx */) {
+const { configure } = require('quasar/wrappers')
+
+// wrap the returned function with configure() helper
+// to get a better IDE autocomplete experience(through Typescript):
+module.exports = configure(function(/* ctx */) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
@@ -187,4 +191,4 @@ module.exports = function(/* ctx */) {
       }
     }
   }
-}
+})

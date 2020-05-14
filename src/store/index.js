@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-// import example from './module-example'
+import chats from './chats'
+import ui from './ui'
+import user from './user'
 
 Vue.use(Vuex)
 
 /*
+
  * If not building with SSR mode, you can
  * directly export the Store instantiation;
  *
@@ -17,7 +19,9 @@ Vue.use(Vuex)
 export default function(/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      // example
+      ui,
+      user,
+      chats
     },
 
     // enable strict mode (adds overhead!)

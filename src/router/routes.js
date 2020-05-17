@@ -5,7 +5,24 @@ const routes = [
     children: [
       {
         path: '',
+        name: 'Chats',
         component: () => import('pages/Index.vue')
+      }
+    ]
+  },
+  {
+    path: '/2',
+    component: () => import('layouts/EmptyLayout.vue'),
+    children: [
+      {
+        path: 'sign-in',
+        name: 'SignIn',
+        component: () => import('pages/SignIn.vue')
+      },
+      {
+        path: 'sign-up',
+        name: 'SignUp',
+        component: () => import('pages/SignUp.vue')
       }
     ]
   }

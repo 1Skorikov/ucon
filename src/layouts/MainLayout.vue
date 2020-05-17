@@ -1,8 +1,12 @@
 <template>
   <q-layout view="lHh lpR lFf">
-    <app-header @toolbarClick="$refs.sidebar.toggleDrawer()" />
+    <app-header :title="$t('utils.appName')">
+      <template #left>
+        <q-btn dense flat round icon="menu" @click="toggleDrawerState" />
+      </template>
+    </app-header>
 
-    <app-sidebar ref="sidebar" />
+    <app-sidebar />
 
     <q-page-container>
       <router-view />
@@ -12,9 +16,17 @@
 
 <script>
 export default {
+  name: 'MainLayout',
+
   components: {
     AppHeader: () => import('components/global/AppHeader'),
     AppSidebar: () => import('components/global/AppSidebar')
+  },
+
+  methods: {
+    toggleDrawerState() {
+      this.$store.commit('ui/toggleDrawerState')
+    }
   }
 }
 </script>

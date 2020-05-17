@@ -11,6 +11,8 @@
     "dev": "quasar dev",
     "build": "quasar build",
     "store": "quasar new store",
+    "page": "quasar new page",
+    "layout": "quasar new layout",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ./"
   },
   "dependencies": {

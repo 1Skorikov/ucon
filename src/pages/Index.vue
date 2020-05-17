@@ -4,7 +4,7 @@
     style="padding-top: 46px;"
   >
     <q-pull-to-refresh @refresh="refresh">
-      <chats-list :key="activeTabName"></chats-list>
+      <chats-list></chats-list>
     </q-pull-to-refresh>
 
     <q-page-scroller
@@ -86,9 +86,9 @@ export default {
   },
 
   methods: {
-    refresh(done) {
-      this.$store.dispatch('chats/getUserChats')
-      setTimeout(done, 1000)
+    async refresh(done) {
+      await this.$store.dispatch('chats/getUserChats')
+      done()
     },
 
     handleSwipe({ evt, ...info }) {
@@ -97,7 +97,7 @@ export default {
       if (nextTab) {
         this.$store.commit('ui/updateActiveChatsList', nextTab.name)
       } else if (info.direction === 'right') {
-        console.log(123)
+        this.$store.commit('ui/toggleDrawerState')
       }
     }
   }

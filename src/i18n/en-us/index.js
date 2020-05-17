@@ -1,6 +1,6 @@
 export default {
   utils: {
-    name: 'Ucon',
+    appName: 'Ucon',
     all: 'all'
   },
 
@@ -8,5 +8,6 @@ export default {
   student: 'student | students',
 
   login: 'sign in',
-  logout: 'sign out'
+  logout: 'sign out',
+  registration: 'sign up'
 }

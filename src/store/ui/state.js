@@ -1,5 +1,6 @@
 export default function() {
   return {
-    activeChatsList: 'all'
+    activeChatsList: 'all',
+    drawerState: false
   }
 }

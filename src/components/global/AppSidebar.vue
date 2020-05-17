@@ -1,15 +1,28 @@
 <template>
-  <q-drawer side="left" overlay behavior="mobile" ref="drawer">
+  <q-drawer
+    v-model="drawerStatus"
+    side="left"
+    overlay
+    behavior="mobile"
+    ref="drawer"
+  >
     <q-scroll-area
       style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd"
     >
       <q-list padding>
-        <q-item clickable v-ripple>
+        <q-item clickable v-ripple :to="{ name: 'SignIn' }">
           <q-item-section avatar>
             <q-icon name="logout" />
           </q-item-section>
 
           <q-item-section>{{ $t("logout") }}</q-item-section>
+        </q-item>
+        <q-item clickable v-ripple :to="{ name: 'SignUp' }">
+          <q-item-section avatar>
+            <q-icon name="logout" />
+          </q-item-section>
+
+          <q-item-section>sign up</q-item-section>
         </q-item>
       </q-list>
     </q-scroll-area>
@@ -31,6 +44,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'AppSidebar',
 
@@ -43,10 +58,17 @@ export default {
     }
   }),
 
-  methods: {
-    toggleDrawer() {
-      this.$refs.drawer.toggle()
-    }
+  computed: {
+    drawerStatus: {
+      get() {
+        return this.drawerState
+      },
+      set() {
+        this.$store.commit('ui/toggleDrawerState')
+      }
+    },
+
+    ...mapState('ui', ['drawerState'])
   }
 }
 </script>

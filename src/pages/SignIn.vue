@@ -1,39 +1,35 @@
 <template>
   <q-page padding>
-    <app-header :title="$t('login')" />
-
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-      <q-input
-        filled
-        v-model="name"
-        label="Your name *"
-        hint="Name and surname"
-        lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Please type something']"
-      />
-
-      <q-input
-        filled
-        type="number"
-        v-model="age"
-        label="Your age *"
-        lazy-rules
-        :rules="[
-          val => (val !== null && val !== '') || 'Please type your age',
-          val => (val > 0 && val < 100) || 'Please type a real age'
-        ]"
-      />
-
-      <div>
-        <q-btn label="Submit" type="submit" color="primary" />
+    <app-header :title="$t('login')">
+      <template #right>
         <q-btn
-          label="Reset"
-          type="reset"
-          color="primary"
+          to="/e/sign-up"
           flat
-          class="q-ml-sm"
+          dense
+          label="Sign up"
+          class="text-capitalize"
+          icon-right="keyboard_arrow_right"
         />
-      </div>
+      </template>
+    </app-header>
+
+    <q-form @submit="onSubmit" class="q-gutter-md q-pa-sm">
+      <q-input
+        v-model.trim="form.email"
+        lazy-rules
+        type="email"
+        label="Email"
+        :rules="[rules.required]"
+      />
+      <q-input
+        v-model.trim="form.password"
+        type="password"
+        lazy-rules
+        label="Full name"
+        autofocus
+        :rules="[rules.required]"
+      />
+      <q-btn label="login" type="submit" color="primary" />
     </q-form>
   </q-page>
 </template>
@@ -48,25 +44,19 @@ export default {
 
   data() {
     return {
-      name: null,
-      age: null
+      form: {
+        email: null,
+        password: null
+      },
+      rules: {
+        required: val => !!val || 'Field is required'
+      }
     }
   },
 
   methods: {
     onSubmit() {
-      this.$q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'cloud_done',
-        message: 'Submitted'
-      })
-    },
 
-    onReset() {
-      this.name = null
-      this.age = null
-      this.accept = false
     }
   }
 }

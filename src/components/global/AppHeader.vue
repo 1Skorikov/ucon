@@ -7,6 +7,7 @@
     <q-toolbar>
       <slot name="left" />
       <q-toolbar-title v-if="title">{{ title }}</q-toolbar-title>
+      <slot name="right" />
     </q-toolbar>
 
     <slot name="bottom" />

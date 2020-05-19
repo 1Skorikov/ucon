@@ -11,7 +11,7 @@ const routes = [
     ]
   },
   {
-    path: '/2',
+    path: '/e',
     component: () => import('layouts/EmptyLayout.vue'),
     children: [
       {

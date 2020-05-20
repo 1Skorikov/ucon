@@ -12,7 +12,7 @@
       :scroll-offset="300"
       :offset="[18, 18]"
     >
-      <q-btn fab icon="keyboard_arrow_up" color="accent" />
+      <q-btn fab-mini icon="keyboard_arrow_up" color="accent" />
     </q-page-scroller>
 
     <q-page-sticky expand position="top">

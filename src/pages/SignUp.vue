@@ -231,18 +231,7 @@ export default {
 
   methods: {
     onSubmit(val) {
-      console.log('onSubmit', this.form)
-
-      this.$q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'cloud_done',
-        message: 'Submitted'
-      })
-
-      this.$router.push({
-        name: 'Chats'
-      })
+      this.$router.push({ name: 'Chats' })
     },
 
     passwordsAreEqual(val) {

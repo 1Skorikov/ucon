@@ -85,6 +85,9 @@ export default {
     }
   },
 
+  sockets: {
+  },
+
   methods: {
     async refresh(done) {
       await this.$store.dispatch('chats/getUserChats')

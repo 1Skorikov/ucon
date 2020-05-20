@@ -14,15 +14,19 @@
     "page": "quasar new page",
     "layout": "quasar new layout",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ./",
-    "server": "nodemon server/server"
+    "server": "nodemon server/index"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "bcrypt-nodejs": "0.0.3",
+    "crypto-js": "^4.0.0",
     "express": "^4.17.1",
+    "mongodb": "^3.5.7",
+    "mongoose": "^5.9.15",
     "quasar": "^1.0.0",
     "socket.io": "^2.3.0",
     "vue-i18n": "^8.0.0",
-    "vue-socket.io": "^3.0.9"
+    "vue-socket.io": "3.0.5"
   },
   "devDependencies": {
     "@quasar/app": "^1.0.0",

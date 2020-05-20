@@ -25,8 +25,7 @@
         v-model.trim="form.password"
         type="password"
         lazy-rules
-        label="Full name"
-        autofocus
+        label="Password"
         :rules="[rules.required]"
       />
       <q-btn label="login" type="submit" color="primary" />
@@ -56,7 +55,7 @@ export default {
 
   methods: {
     onSubmit() {
-
+      this.$socket.emit('user:sign-in', this.form, console.log)
     }
   }
 }

@@ -69,6 +69,7 @@ module.exports = {
     "space-before-function-paren": ["error", "never"],
     "vue/max-attributes-per-line": ["error", {
       "singleline": 100,
-    }]
+    }],
+    'standard/no-callback-literal': [0, ["cb", "callback"]]
   }
 }

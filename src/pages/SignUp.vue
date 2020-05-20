@@ -231,7 +231,8 @@ export default {
 
   methods: {
     onSubmit(val) {
-      this.$router.push({ name: 'Chats' })
+      // this.$router.push({ name: 'Chats' })
+      this.$socket.emit('user:sign-up', this.form, console.error)
     },
 
     passwordsAreEqual(val) {
@@ -240,7 +241,7 @@ export default {
 
     async nextStep() {
       this.formValid = await this.$refs.signUpForm.validate()
-      if (!this.formValid) return
+      // if (!this.formValid) return
       this.$refs.stepper.next()
     },
 

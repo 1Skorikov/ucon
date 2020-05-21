@@ -24,6 +24,13 @@
 
           <q-item-section>sign up</q-item-section>
         </q-item>
+        <q-item clickable v-ripple @click="logout">
+          <q-item-section avatar>
+            <q-icon name="logout" />
+          </q-item-section>
+
+          <q-item-section>Logout</q-item-section>
+        </q-item>
       </q-list>
     </q-scroll-area>
 
@@ -69,6 +76,13 @@ export default {
     },
 
     ...mapState('ui', ['drawerState'])
+  },
+
+  methods: {
+    logout() {
+      localStorage.setItem('userLoggedIn', false)
+      this.$router.push({ name: 'SignIn' })
+    }
   }
 }
 </script>

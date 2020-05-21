@@ -2,10 +2,17 @@ const { Schema, model } = require('mongoose')
 const bcrypt = require('bcrypt-nodejs')
 
 const userSchema = new Schema({
-  nickname: String,
+  // universityId: { type: String, required: true },
+  // facultyId: { type: String, required: true },
+  // specialtyId: { type: String, required: true },
+  // groupId: { type: String, required: true },
+  fullName: String,
   email: String,
+  nickname: String,
+  userRole: String,
+  teacherUID: String,
   passwordHash: String
-})
+}, { collection: 'users' })
 
 userSchema
   .virtual('password')

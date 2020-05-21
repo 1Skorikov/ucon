@@ -69,28 +69,37 @@
           :done="step > 2"
           :header-nav="step > 2"
         >
-          <q-input
-            v-model.trim="form.university.name"
-            lazy-rules
+          <q-select
+            v-model="form.university"
+            :options="universities.map(e => ({ id: e._id, label: e.name }))"
             label="University"
             :rules="[rules.required]"
+            behavior="dialog"
+            :loading="loading"
+            :disable="loading"
           />
-          <q-input
-            v-model.trim="form.university.faculty"
-            lazy-rules
+          <q-select
+            v-model="form.faculty"
+            :options="faculties"
             label="Faculty"
             :rules="[rules.required]"
+            behavior="dialog"
+            :loading="loading"
+            :disable="loading || !faculties.length"
           />
-          <q-input
+          <q-select
             v-if="form.userRole === 'student'"
-            v-model.trim="form.university.specialization"
-            lazy-rules
-            label="Specialization"
+            v-model="form.specialty"
+            :options="specialties"
+            label="Specialty"
             :rules="[rules.required]"
+            behavior="dialog"
+            :loading="loading"
+            :disable="loading || !specialties.length"
           />
           <q-input
             v-if="form.userRole === 'student'"
-            v-model.trim="form.university.groupNumber"
+            v-model.trim="form.groupNumber"
             lazy-rules
             type="number"
             label="Number of group"
@@ -190,6 +199,7 @@ export default {
       step: 1,
       confirmPassword: null,
       formValid: true,
+      loading: false,
       options: [
         {
           label: 'I am a student',
@@ -207,12 +217,10 @@ export default {
         nickname: null,
         userRole: 'student',
         teacherUID: uid(),
-        university: {
-          name: null,
-          faculty: null,
-          groupNumber: null,
-          specialization: null
-        }
+        university: null,
+        faculty: null,
+        groupNumber: null,
+        specialty: null
       },
       rules: {
         required: val => !!val || 'Field is required',
@@ -225,14 +233,72 @@ export default {
         password: [
           val => (val.length > 5 && val.length < 13) || 'Fill in between 6 and 12 characters'
         ]
-      }
+      },
+      universities: [],
+      faculties: [],
+      specialties: []
     }
+  },
+
+  watch: {
+    'form.university.id'(newId) {
+      this.faculties = []
+      this.specialties = []
+      this.form.faculty = null
+      this.form.specialty = null
+
+      const u = this.universities.find(e => e._id === newId)
+      this.faculties = u ? u.faculties.map(e => ({ id: e.id, label: e.name })) : []
+    },
+    'form.faculty.id'(newId) {
+      this.specialties = []
+      this.form.specialty = null
+
+      const u = this.universities.find(e => e._id === this.form.university.id)
+      const f = u.faculties.find(e => e.id === newId)
+      this.specialties = f ? f.specialties.map(e => ({ id: e.id, label: e.name })) : []
+    }
+  },
+
+  created() {
+    this.loading = true
+    this.$socket.emit('get:universities', (err, data) => {
+      this.loading = false
+
+      if (err) {
+        return this.$q.notify({
+          type: 'negative',
+          message: err
+        })
+      }
+
+      this.universities = data
+    })
   },
 
   methods: {
     onSubmit(val) {
-      // this.$router.push({ name: 'Chats' })
-      this.$socket.emit('user:sign-up', this.form, console.error)
+      const cb = (err, res) => {
+        if (err) {
+          return this.$q.notify({
+            type: 'negative',
+            message: res
+          })
+        }
+        localStorage.setItem('userLoggedIn', true)
+        this.$router.push({ name: 'Chats' })
+      }
+
+      const params = {
+        fullName: this.form.fullName,
+        email: this.form.email,
+        password: this.form.password,
+        nickname: this.form.nickname,
+        userRole: this.form.userRole,
+        teacherUID: this.form.userRole === 'teacher' ? uid() : null
+      }
+
+      this.$socket.emit('user:sign-up', params, cb)
     },
 
     passwordsAreEqual(val) {

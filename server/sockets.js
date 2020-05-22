@@ -14,23 +14,7 @@ module.exports = io => {
       const exist = await UserModel.exists({ email: data.email })
       if (exist) return cb(true, 'This email is already taken')
 
-      const {
-        fullName,
-        email,
-        nickname,
-        userRole,
-        teacherUID,
-        password
-      } = data
-
-      UserModel.create({
-        fullName,
-        email,
-        nickname,
-        userRole,
-        teacherUID,
-        password
-      }).then(user => cb(false, user))
+      UserModel.create(data).then(user => cb(false, user))
     })
 
     socket.on('user:sign-in', (data, cb) => {
@@ -62,5 +46,7 @@ module.exports = io => {
         cb(true, err)
       }
     })
+
+    socket.on('test', (data) => console.log(data))
   })
 }

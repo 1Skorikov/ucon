@@ -2,13 +2,12 @@ const { Schema, model } = require('mongoose')
 const bcrypt = require('bcrypt-nodejs')
 
 const userSchema = new Schema({
-  // universityId: { type: String, required: true },
-  // facultyId: { type: String, required: true },
-  // specialtyId: { type: String, required: true },
-  // groupId: { type: String, required: true },
+  universityId: String,
+  facultyId: Number,
+  specialtyId: Number,
+  groupNumber: Number,
   fullName: String,
   email: String,
-  nickname: String,
   userRole: String,
   teacherUID: String,
   passwordHash: String

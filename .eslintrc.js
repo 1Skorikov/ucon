@@ -70,6 +70,7 @@ module.exports = {
     "vue/max-attributes-per-line": ["error", {
       "singleline": 100,
     }],
-    'standard/no-callback-literal': [0, ["cb", "callback"]]
+    'standard/no-callback-literal': [0, ["cb", "callback"]],
+    'no-unused-vars': 0
   }
 }

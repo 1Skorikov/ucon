@@ -185,6 +185,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { uid, copyToClipboard } from 'quasar'
 
 export default {
@@ -289,13 +290,17 @@ export default {
         this.$router.push({ name: 'Chats' })
       }
 
+      const isStudent = this.form.userRole === 'student'
       const params = {
+        universityId: this.form.university.id,
+        facultyId: this.form.faculty.id,
+        specialtyId: isStudent ? this.form.specialty.id : null,
+        groupNumber: isStudent ? this.form.groupNumber : null,
         fullName: this.form.fullName,
         email: this.form.email,
-        password: this.form.password,
-        nickname: this.form.nickname,
         userRole: this.form.userRole,
-        teacherUID: this.form.userRole === 'teacher' ? uid() : null
+        teacherUID: !isStudent ? this.form.teacherUID : null,
+        password: this.form.password
       }
 
       this.$socket.emit('user:sign-up', params, cb)
@@ -307,7 +312,6 @@ export default {
 
     async nextStep() {
       this.formValid = await this.$refs.signUpForm.validate()
-      // if (!this.formValid) return
       this.$refs.stepper.next()
     },
 

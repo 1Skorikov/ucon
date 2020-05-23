@@ -5,14 +5,24 @@
 </template>
 
 <script>
+import sockets from './mixins/sockets'
+
 const faker = require('faker')
 window.faker = faker
 
 export default {
   name: 'App',
 
-  created() {
-    this.$store.dispatch('chats/getUserChats')
+  mixins: [sockets],
+
+  mounted() {
+    this.$socket.emit(
+      'user:getData',
+      this.$q.localStorage.getItem('userId'),
+      (err, res) => {
+        console.warn(err)
+      }
+    )
   }
 }
 </script>

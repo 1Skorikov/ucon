@@ -3,10 +3,9 @@ const UniversityModel = require('./models/university.model')
 
 module.exports = io => {
   io.on('connection', socket => {
-    console.log('a user connected', socket.id)
     socket.on('disconnect', () => console.log('user disconnected'))
 
-    socket.on('user:sign-up', async (data, cb) => {
+    socket.on('user:sign-up', async function(data, cb) {
       if (!data.email || !data.password) {
         return cb(true, 'Invalid data')
       }
@@ -14,31 +13,31 @@ module.exports = io => {
       const exist = await UserModel.exists({ email: data.email })
       if (exist) return cb(true, 'This email is already taken')
 
-      UserModel.create(data).then(user => cb(false, user))
+      UserModel.create(data)
+        .then(user => {
+          cb(false, user)
+          socket.emit('initUser', user)
+        })
+        .catch(err => cb(true, err))
     })
 
     socket.on('user:sign-in', (data, cb) => {
-      console.log('132', data)
-
       if (!data.email || !data.password) {
-        return cb('invalidData')
+        return cb(true, 'Invalid data')
       }
 
       UserModel.findOne({ email: data.email })
         .then(user => {
           if (!user || !user.checkPassword(data.password)) {
-            return cb('invalidData')
+            return cb(true, 'Invalid data')
           }
-
-          cb('success')
+          cb(false, user)
+          socket.emit('initUser', user)
         })
-        .catch(err => {
-          console.log('User.findOne', err)
-          cb(err)
-        })
+        .catch(err => cb(true, err))
     })
 
-    socket.on('get:universities', async (cb) => {
+    socket.on('get:universities', async function(cb) {
       try {
         const universities = await UniversityModel.find()
         cb(false, universities)
@@ -47,6 +46,14 @@ module.exports = io => {
       }
     })
 
-    socket.on('test', (data) => console.log(data))
+    socket.on('user:getData', async function(userId, cb) {
+      try {
+        const user = await UserModel.findById(userId)
+        if (!user) return cb(false, 'Can\'t find user')
+        socket.emit('initUser', user)
+      } catch (err) {
+        cb(true, err)
+      }
+    })
   })
 }

@@ -43,22 +43,22 @@
         <q-avatar size="56px" class="q-mb-sm">
           <img :src="userInfo.photoUrl" />
         </q-avatar>
-        <div class="text-weight-bold">{{ userInfo.name }}</div>
-        <div>{{ `@${userInfo.nickname}` }}</div>
+        <div class="text-weight-bold">{{ me.name }}</div>
+        <div>{{ `@${me.email}` }}</div>
       </div>
     </q-img>
   </q-drawer>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'AppSidebar',
 
   data: () => ({
     userInfo: {
-      sidebarBgc: 'statics/bgc/sidebar-background.jpg',
+      sidebarBgc: 'statics/backgrounds/sidebar-background.jpg',
       photoUrl: 'https://cdn.quasar.dev/img/boy-avatar.png',
       name: 'Ivan Skorikov',
       nickname: 'gagaledi'
@@ -75,12 +75,14 @@ export default {
       }
     },
 
-    ...mapState('ui', ['drawerState'])
+    ...mapState('ui', ['drawerState']),
+    ...mapGetters('user', ['me'])
   },
 
   methods: {
     logout() {
-      localStorage.setItem('userLoggedIn', false)
+      this.$q.localStorage.set('userLoggedIn', false)
+      this.$q.localStorage.set('userId', null)
       this.$router.push({ name: 'SignIn' })
     }
   }

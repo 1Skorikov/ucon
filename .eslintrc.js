@@ -52,7 +52,6 @@ module.exports = {
     // allow paren-less arrow functions
     "arrow-parens": "off",
     "one-var": "off",
-
     "import/first": "off",
     "import/named": "error",
     "import/namespace": "error",
@@ -71,6 +70,7 @@ module.exports = {
       "singleline": 100,
     }],
     'standard/no-callback-literal': [0, ["cb", "callback"]],
-    'no-unused-vars': 0
+    'no-unused-vars': 0,
+    'camelcase': ["error", { allow: ["^SOCKET_", "^socket_", "^SA_", "^SM_"] }]
   }
 }

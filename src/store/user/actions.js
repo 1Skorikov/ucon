@@ -1,4 +1,3 @@
-export function signUp(context, data) {
-  console.log('signUp', context)
-  console.log('signUp', this.sockets)
+export function SOCKET_chatMessage(context, data) {
+  console.log('!!!socket_chatMessage', data)
 }

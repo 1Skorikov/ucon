@@ -13,13 +13,13 @@
       </template>
     </app-header>
 
-    <q-form @submit="onSubmit" class="q-gutter-md q-pa-sm">
+    <q-form @submit.prevent="onSubmit" class="q-gutter-md q-pa-sm">
       <q-input
         v-model.trim="form.email"
         lazy-rules
         type="email"
         label="Email"
-        :rules="[rules.required]"
+        :rules="[rules.required, isValidEmail]"
       />
       <q-input
         v-model.trim="form.password"
@@ -55,7 +55,24 @@ export default {
 
   methods: {
     onSubmit() {
-      this.$socket.emit('user:sign-in', this.form, console.log)
+      const cb = (err, res) => {
+        if (err) {
+          return this.$q.notify({
+            type: 'negative',
+            message: res
+          })
+        }
+        this.$q.localStorage.set('userLoggedIn', true)
+        this.$q.localStorage.set('userId', res._id)
+        this.$router.push({ name: 'Chats' })
+      }
+
+      this.$socket.emit('user:sign-in', this.form, cb)
+    },
+
+    isValidEmail(val) {
+      const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/
+      return emailPattern.test(val) || 'Invalid email'
     }
   }
 }

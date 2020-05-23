@@ -128,13 +128,6 @@
             </template>
           </q-input>
           <q-input
-            v-model.trim="form.nickname"
-            lazy-rules
-            type="text"
-            label="Nickname"
-            :rules="[rules.required]"
-          />
-          <q-input
             v-model.trim="form.password"
             lazy-rules
             type="password"
@@ -215,7 +208,6 @@ export default {
         fullName: null,
         email: null,
         password: null,
-        nickname: null,
         userRole: 'student',
         teacherUID: uid(),
         university: null,
@@ -286,7 +278,8 @@ export default {
             message: res
           })
         }
-        localStorage.setItem('userLoggedIn', true)
+        this.$q.localStorage.set('userLoggedIn', true)
+        this.$q.localStorage.set('userId', res._id)
         this.$router.push({ name: 'Chats' })
       }
 
@@ -307,11 +300,12 @@ export default {
     },
 
     passwordsAreEqual(val) {
-      return this.form.password === val || 'Password mismatch'
+      return this.form.password === val || 'Passwords mismatch'
     },
 
     async nextStep() {
       this.formValid = await this.$refs.signUpForm.validate()
+      if (!this.formValid) return
       this.$refs.stepper.next()
     },
 

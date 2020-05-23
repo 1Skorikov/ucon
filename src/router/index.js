@@ -1,3 +1,4 @@
+import { LocalStorage } from 'quasar'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './routes'
@@ -28,7 +29,7 @@ export default function({ store, ssrContext }) {
   Router.beforeEach((to, from, next) => {
     if (to.name === 'SignIn' || to.name === 'SignUp') return next()
 
-    if (!JSON.parse(localStorage.getItem('userLoggedIn'))) {
+    if (!LocalStorage.getItem('userLoggedIn')) {
       return next({ name: 'SignIn' })
     }
 

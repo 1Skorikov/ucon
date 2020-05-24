@@ -259,10 +259,7 @@ export default {
       this.loading = false
 
       if (err) {
-        return this.$q.notify({
-          type: 'negative',
-          message: err
-        })
+        return this.$q.notify({ type: 'negative', message: err })
       }
 
       this.universities = data

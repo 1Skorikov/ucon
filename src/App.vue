@@ -15,14 +15,22 @@ export default {
 
   mixins: [sockets],
 
-  mounted() {
-    this.$socket.emit(
-      'user:getData',
-      this.$q.localStorage.getItem('userId'),
-      (err, res) => {
-        console.warn(err)
-      }
-    )
+  created() {
+    this.$store.dispatch('chats/getUserChats')
+    this.fetchData()
+  },
+
+  methods: {
+    fetchData() {
+      const userId = this.$q.localStorage.getItem('userId')
+      if (!userId) return
+
+      this.$socket.emit(
+        'user:getData',
+        userId,
+        (err, res) => console.warn(err, res)
+      )
+    }
   }
 }
 </script>

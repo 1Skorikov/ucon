@@ -43,8 +43,9 @@
         <q-avatar size="56px" class="q-mb-sm">
           <img :src="userInfo.photoUrl" />
         </q-avatar>
-        <div class="text-weight-bold">{{ me.name }}</div>
-        <div>{{ `@${me.email}` }}</div>
+        <div class="text-weight-bold">{{ me.fullName }}</div>
+        <div>{{ me.email }}</div>
+        <div>{{ me.groupNumber }}</div>
       </div>
     </q-img>
   </q-drawer>
@@ -82,7 +83,7 @@ export default {
   methods: {
     logout() {
       this.$q.localStorage.set('userLoggedIn', false)
-      this.$q.localStorage.set('userId', null)
+      this.$q.localStorage.set('userId', '')
       this.$router.push({ name: 'SignIn' })
     }
   }

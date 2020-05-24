@@ -11,14 +11,17 @@ module.exports = io => {
       }
 
       const exist = await UserModel.exists({ email: data.email })
-      if (exist) return cb(true, 'This email is already taken')
+      if (exist) {
+        return cb(true, 'This email is already taken')
+      }
 
-      UserModel.create(data)
-        .then(user => {
-          cb(false, user)
-          socket.emit('initUser', user)
-        })
-        .catch(err => cb(true, err))
+      try {
+        const user = await UserModel.create(data)
+        cb(false, user)
+        socket.emit('initUser', user)
+      } catch (err) {
+        cb(true, err)
+      }
     })
 
     socket.on('user:sign-in', (data, cb) => {
@@ -48,7 +51,7 @@ module.exports = io => {
 
     socket.on('user:getData', async function(userId, cb) {
       try {
-        const user = await UserModel.findById(userId)
+        const user = await UserModel.findById(userId).select('-passwordHash')
         if (!user) return cb(false, 'Can\'t find user')
         socket.emit('initUser', user)
       } catch (err) {

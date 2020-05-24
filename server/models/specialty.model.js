@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose')
 const specialtySchema = new Schema({
   name: {
     type: String,
-    unique: false // !!!!
+    unique: true
   }
 }, { collection: 'specialties' })
 

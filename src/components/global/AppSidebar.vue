@@ -10,26 +10,21 @@
       style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd"
     >
       <q-list padding>
-        <q-item clickable v-ripple :to="{ name: 'SignIn' }">
+        <q-item clickable v-ripple :to="{ name: 'Account' }">
           <q-item-section avatar>
-            <q-icon name="logout" />
+            <q-icon name="account_circle" />
           </q-item-section>
 
-          <q-item-section>{{ $t("logout") }}</q-item-section>
-        </q-item>
-        <q-item clickable v-ripple :to="{ name: 'SignUp' }">
-          <q-item-section avatar>
-            <q-icon name="logout" />
-          </q-item-section>
-
-          <q-item-section>sign up</q-item-section>
+          <q-item-section>Account</q-item-section>
         </q-item>
         <q-item clickable v-ripple @click="logout">
           <q-item-section avatar>
             <q-icon name="logout" />
           </q-item-section>
 
-          <q-item-section>Logout</q-item-section>
+          <q-item-section class="text-capitalize">
+            {{ $t("logout") }}
+          </q-item-section>
         </q-item>
       </q-list>
     </q-scroll-area>

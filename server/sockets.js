@@ -49,10 +49,10 @@ module.exports = io => {
       }
     })
 
-    socket.on('user:getData', async function(userId, cb) {
+    socket.on('get:user', async function(userId, cb) {
       try {
         const user = await UserModel.findById(userId).select('-passwordHash')
-        if (!user) return cb(false, 'Can\'t find user')
+        if (!user) return cb(true, 'Can not find user')
         socket.emit('initUser', user)
       } catch (err) {
         cb(true, err)

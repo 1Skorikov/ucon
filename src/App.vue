@@ -26,9 +26,16 @@ export default {
       if (!userId) return
 
       this.$socket.emit(
-        'user:getData',
+        'get:user',
         userId,
-        (err, res) => console.warn(err, res)
+        (err, res) => {
+          if (err) {
+            console.error(err, res)
+            this.$q.localStorage.set('userId', '')
+            this.$q.localStorage.set('userLoggedIn', false)
+            this.$router.push({ name: 'SignIn' })
+          }
+        }
       )
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <app-header :title="$t('registration')">
+    <app-header>
       <template #right>
         <q-btn
           class="text-capitalize"
@@ -254,37 +254,28 @@ export default {
   },
 
   created() {
-    this.loading = true
-    this.$socket.emit('get:universities', (err, data) => {
-      this.loading = false
-
-      if (err) {
-        return this.$q.notify({ type: 'negative', message: err })
-      }
-
-      this.universities = data
-    })
+    this.fetchData()
   },
 
   methods: {
-    onSubmit(val) {
-      const cb = (err, res) => {
-        if (err) {
-          return this.$q.notify({
-            type: 'negative',
-            message: res
-          })
-        }
-        this.$q.localStorage.set('userLoggedIn', true)
-        this.$q.localStorage.set('userId', res._id)
-        this.$router.push({ name: 'Chats' })
-      }
+    async fetchData() {
+      this.loading = true
+      this.universities = await this._getUniversities()
+      this.loading = false
+    },
 
+    onSubmit(val) {
       const isStudent = this.form.userRole === 'student'
       const params = {
         universityId: this.form.university.id,
-        facultyId: this.form.faculty.id,
-        specialtyId: isStudent ? this.form.specialty.id : null,
+        faculty: {
+          id: this.form.faculty.id,
+          name: this.form.faculty.label
+        },
+        specialty: isStudent ? {
+          id: this.form.specialty.id,
+          name: this.form.specialty.label
+        } : null,
         groupNumber: isStudent ? this.form.groupNumber : null,
         fullName: this.form.fullName,
         email: this.form.email,
@@ -293,7 +284,7 @@ export default {
         password: this.form.password
       }
 
-      this.$socket.emit('user:sign-up', params, cb)
+      this._signUp(params)
     },
 
     passwordsAreEqual(val) {

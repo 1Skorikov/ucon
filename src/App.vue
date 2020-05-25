@@ -6,9 +6,7 @@
 
 <script>
 import sockets from './mixins/sockets'
-
-const faker = require('faker')
-window.faker = faker
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
@@ -16,7 +14,6 @@ export default {
   mixins: [sockets],
 
   created() {
-    this.$store.dispatch('chats/getUserChats')
     this.fetchData()
   },
 
@@ -25,8 +22,7 @@ export default {
       const userId = this.$q.localStorage.getItem('userId')
       if (!userId) return
 
-      this.$socket.emit(
-        'get:user',
+      this.$socket.emit('get:user',
         userId,
         (err, res) => {
           if (err) {
@@ -38,6 +34,10 @@ export default {
         }
       )
     }
+  },
+
+  computed: {
+    ...mapState('user', ['user'])
   }
 }
 </script>

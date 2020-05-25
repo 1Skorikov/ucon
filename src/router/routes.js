@@ -2,11 +2,18 @@ const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    redirect: 'chats',
     children: [
       {
-        path: '',
+        path: 'chats',
         name: 'Chats',
+        meta: { navbarTitle: 'Ucon' },
         component: () => import('pages/Index.vue')
+      },
+      {
+        path: 'account',
+        name: 'Account',
+        component: () => import('pages/Account.vue')
       }
     ]
   },

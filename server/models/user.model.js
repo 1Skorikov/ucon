@@ -2,9 +2,9 @@ const { Schema, model } = require('mongoose')
 const bcrypt = require('bcrypt-nodejs')
 
 const userSchema = new Schema({
-  universityId: String,
-  facultyId: Number,
-  specialtyId: Number,
+  university: Object,
+  faculty: Object,
+  specialty: Object,
   groupNumber: Number,
   fullName: String,
   email: String,

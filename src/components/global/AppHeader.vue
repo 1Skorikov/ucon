@@ -6,7 +6,9 @@
   >
     <q-toolbar>
       <slot name="left" />
-      <q-toolbar-title v-if="title">{{ title }}</q-toolbar-title>
+      <q-toolbar-title>
+        {{ headerTitle }}
+      </q-toolbar-title>
       <slot name="right" />
     </q-toolbar>
 
@@ -22,6 +24,12 @@ export default {
     title: {
       type: String,
       default: null
+    }
+  },
+
+  computed: {
+    headerTitle() {
+      return this.title || this.$route.meta.navbarTitle || this.$route.name
     }
   }
 }

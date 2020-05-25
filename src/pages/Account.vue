@@ -5,53 +5,25 @@
       ref="signUpForm"
       class="q-gutter-md q-pa-sm"
     >
-      <!-- <q-input lazy-rules label="Full name" />
-      <q-input lazy-rules type="email" label="Email" />
-      <q-option-group
-        :options="options"
-        color="primary"
-        class="q-mt-md"
-        inline
-        dense
-      /> -->
-
-      <!-- ОТПРАВЛЯТЬ НА КЛИЕНТ В ОБЬЕКТЕ ЮЗЕРА ИНФУ О УНИВЕРЕ И ФАКУЛЬТЕТЕ ИЛИ СТОРЫ ДЛЯ ЭТО ОТДЕЛЬНЫЕ -->
-
-      <!-- <q-select
-        :options="universities.map(e => ({ id: e._id, label: e.name }))"
-        label="University"
-        :rules="[rules.required]"
-        behavior="dialog"
-        :loading="loading"
-        :disable="loading"
-      />
-      <q-select
-        :options="faculties"
-        label="Faculty"
-        :rules="[rules.required]"
-        behavior="dialog"
-        :loading="loading"
-        :disable="loading || !faculties.length"
-      />
-      <q-select
-        v-if="form.userRole === 'student'"
-        :options="specialties"
+      <q-input :value="user.fullName" label="Full name" readonly />
+      <q-input :value="user.email" type="email" label="Email" readonly />
+      <q-input :value="user.university.name" label="University" readonly />
+      <q-input :value="user.faculty.name" label="Faculty" readonly />
+      <q-input
+        v-if="user.userRole === 'student'"
+        :value="user.specialty.name"
         label="Specialty"
-        :rules="[rules.required]"
-        behavior="dialog"
-        :loading="loading"
-        :disable="loading || !specialties.length"
+        readonly
       />
       <q-input
-        v-if="form.userRole === 'student'"
-        lazy-rules
-        type="number"
+        v-if="user.userRole === 'student'"
+        :value="user.groupNumber"
         label="Number of group"
+        readonly
       />
-
       <q-input
-        v-if="form.userRole === 'teacher'"
-        lazy-rules
+        v-if="user.userRole === 'teacher'"
+        :value="user.teacherUID"
         type="text"
         label="Teacher uid"
         hint="Unique id to confirm the status of a teacher"
@@ -61,23 +33,38 @@
           <q-icon @click="copyUID" size="20px" name="fas fa-clone" />
         </template>
       </q-input>
-      <q-input
-        lazy-rules
-        type="password"
-        label="Password"
-        hint="Fill in between 6 and 12 characters"
-      />
-      <q-input lazy-rules type="password" label="Repeat password" /> -->
     </q-form>
   </q-page>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { copyToClipboard } from 'quasar'
+
 export default {
   name: 'Account',
 
   methods: {
-    onSubmit() { }
+    onSubmit() { },
+    copyUID() {
+      copyToClipboard(this.user.teacherUID)
+        .then(() => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'ID copied'
+          })
+        })
+        .catch(() => {
+          this.$q.notify({
+            type: 'negative',
+            message: 'Something went wrong'
+          })
+        })
+    }
+  },
+
+  computed: {
+    ...mapState('user', ['user'])
   }
 }
 </script>

@@ -10,6 +10,13 @@
       style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd"
     >
       <q-list padding>
+        <q-item clickable v-ripple :to="{ name: 'Chats' }">
+          <q-item-section avatar>
+            <q-icon name="inbox" />
+          </q-item-section>
+
+          <q-item-section>Chats</q-item-section>
+        </q-item>
         <q-item clickable v-ripple :to="{ name: 'Account' }">
           <q-item-section avatar>
             <q-icon name="account_circle" />
@@ -17,7 +24,7 @@
 
           <q-item-section>Account</q-item-section>
         </q-item>
-        <q-item clickable v-ripple @click="logout">
+        <q-item clickable v-ripple @click="_logout">
           <q-item-section avatar>
             <q-icon name="logout" />
           </q-item-section>
@@ -40,7 +47,6 @@
         </q-avatar>
         <div class="text-weight-bold">{{ me.fullName }}</div>
         <div>{{ me.email }}</div>
-        <div>{{ me.groupNumber }}</div>
       </div>
     </q-img>
   </q-drawer>
@@ -73,14 +79,6 @@ export default {
 
     ...mapState('ui', ['drawerState']),
     ...mapGetters('user', ['me'])
-  },
-
-  methods: {
-    logout() {
-      this.$q.localStorage.set('userLoggedIn', false)
-      this.$q.localStorage.set('userId', '')
-      this.$router.push({ name: 'SignIn' })
-    }
   }
 }
 </script>

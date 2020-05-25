@@ -1,4 +1,5 @@
 import { date } from 'quasar'
+const faker = require('faker')
 
 export function getUserChats({ commit }) {
   const chats = []

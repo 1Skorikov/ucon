@@ -1,5 +1,6 @@
 const UserModel = require('./models/user.model')
 const UniversityModel = require('./models/university.model')
+const ChatModel = require('./models/chat.model')
 
 module.exports = io => {
   io.on('connection', socket => {
@@ -16,7 +17,8 @@ module.exports = io => {
       }
 
       try {
-        const user = await UserModel.create(data)
+        const university = await UniversityModel.findById(data.universityId)
+        const user = await UserModel.create({ ...data, university })
         cb(false, user)
         socket.emit('initUser', user)
       } catch (err) {
@@ -58,5 +60,16 @@ module.exports = io => {
         cb(true, err)
       }
     })
+
+    // socket.on('newChat', async function(data, cb) {
+    //   if (!data.chatName) return cb(true, 'invalidData')
+
+    //   try {
+    //     const chat = await ChatModel.create(data)
+    //     console.log('chat', chat)
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
+    // })
   })
 }

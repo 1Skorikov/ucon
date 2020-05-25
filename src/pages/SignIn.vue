@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <app-header :title="$t('login')">
+    <app-header>
       <template #right>
         <q-btn
           to="/e/sign-up"
@@ -55,19 +55,7 @@ export default {
 
   methods: {
     onSubmit() {
-      const cb = (err, res) => {
-        if (err) {
-          return this.$q.notify({
-            type: 'negative',
-            message: res
-          })
-        }
-        this.$q.localStorage.set('userLoggedIn', true)
-        this.$q.localStorage.set('userId', res._id)
-        this.$router.push({ name: 'Chats' })
-      }
-
-      this.$socket.emit('user:sign-in', this.form, cb)
+      this._login(this.form)
     },
 
     isValidEmail(val) {

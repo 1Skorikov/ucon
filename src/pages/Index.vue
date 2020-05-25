@@ -7,14 +7,6 @@
       <chats-list></chats-list>
     </q-pull-to-refresh>
 
-    <q-page-scroller
-      position="bottom-right"
-      :scroll-offset="300"
-      :offset="[18, 18]"
-    >
-      <q-btn fab-mini icon="keyboard_arrow_up" color="accent" />
-    </q-page-scroller>
-
     <q-page-sticky expand position="top">
       <q-tabs
         v-model="activeTabName"
@@ -32,10 +24,30 @@
         </q-tab>
       </q-tabs>
     </q-page-sticky>
+
+    <q-page-sticky position="bottom-right" :offset="fabPos">
+      <q-fab icon="add" direction="left" color="accent">
+        <q-fab-action
+          @click="createChat"
+          color="primary"
+          label="chat"
+          label-position="left"
+        />
+        <q-fab-action
+          v-if="user.userRole === 'teacher'"
+          @click="broadcast"
+          color="primary"
+          label="broadcast"
+          label-position="left"
+        />
+      </q-fab>
+    </q-page-sticky>
   </q-page>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'PageIndex',
 
@@ -45,29 +57,13 @@ export default {
 
   data() {
     return {
-      tabs: [
-        {
-          id: 0,
-          name: 'all',
-          label: this.$tc('utils.all')
-        },
-        {
-          id: 1,
-          name: 'group',
-          label: 408
-        },
-        {
-          id: 2,
-          name: 'student',
-          label: this.$tc('student', 2)
-        },
-        {
-          id: 3,
-          name: 'teacher',
-          label: this.$tc('teacher', 2)
-        }
-      ]
+      fab: false,
+      fabPos: [18, 18]
     }
+  },
+
+  created() {
+    this.$store.dispatch('chats/getUserChats')
   },
 
   computed: {
@@ -82,10 +78,39 @@ export default {
 
     activeTab() {
       return this.tabs.find(e => e.name === this.activeTabName)
-    }
-  },
+    },
 
-  sockets: {
+    tabs() {
+      const tabs = [
+        {
+          id: 0,
+          name: 'all',
+          label: this.$tc('utils.all')
+        },
+        {
+          id: 2,
+          name: 'student',
+          label: this.$tc('student', 2)
+        },
+        {
+          id: 3,
+          name: 'teacher',
+          label: this.$tc('teacher', 2)
+        }
+      ]
+
+      if (this.user.userRole === 'student') {
+        tabs.splice(1, 0, {
+          id: 1,
+          name: 'group',
+          label: this.user.groupNumber
+        })
+      }
+
+      return tabs
+    },
+
+    ...mapState('user', ['user'])
   },
 
   methods: {
@@ -102,6 +127,14 @@ export default {
       } else if (info.direction === 'right') {
         this.$store.commit('ui/toggleDrawerState')
       }
+    },
+
+    createChat() {
+      console.log('new chat')
+    },
+
+    broadcast() {
+      console.log('broadcast message')
     }
   }
 }

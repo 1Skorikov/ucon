@@ -61,6 +61,17 @@ module.exports = io => {
       }
     })
 
+    socket.on('search:recipient', async function(query, cb) {
+      if (!query) return cb(true, 'invalid query')
+
+      try {
+        const recipients = await UserModel.findByName(query)
+        cb(false, recipients)
+      } catch (err) {
+        cb(true, 'Can not find')
+      }
+    })
+
     // socket.on('newChat', async function(data, cb) {
     //   if (!data.chatName) return cb(true, 'invalidData')
 

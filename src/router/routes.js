@@ -14,6 +14,12 @@ const routes = [
         path: 'account',
         name: 'Account',
         component: () => import('pages/Account.vue')
+      },
+      {
+        path: 'recipient-selector',
+        name: 'RecipientSelector',
+        meta: { navbarTitle: 'Select recipient' },
+        component: () => import('pages/RecipientSelector.vue')
       }
     ]
   },

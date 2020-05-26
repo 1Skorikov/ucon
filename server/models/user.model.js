@@ -13,8 +13,7 @@ const userSchema = new Schema({
   passwordHash: String
 }, { collection: 'users' })
 
-userSchema
-  .virtual('password')
+userSchema.virtual('password')
   .set(function(password) {
     this.passwordHash = this.encryptPassword(password)
   })
@@ -26,6 +25,12 @@ userSchema.methods = {
   },
   checkPassword: function(password) {
     return bcrypt.compareSync(password, this.passwordHash)
+  }
+}
+
+userSchema.statics = {
+  findByName(name) {
+    return this.find({ fullName: new RegExp(name, 'i') })
   }
 }
 

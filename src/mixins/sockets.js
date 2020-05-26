@@ -62,6 +62,19 @@ export default {
           resolve(data)
         })
       })
+    },
+
+    _searchRecipient(query) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('search:recipient', query, (err, data) => {
+          if (err) {
+            notify('negative', err)
+            return reject(data)
+          }
+
+          resolve(data)
+        })
+      })
     }
   }
 }

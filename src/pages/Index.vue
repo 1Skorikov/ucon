@@ -28,7 +28,7 @@
     <q-page-sticky position="bottom-right" :offset="fabPos">
       <q-fab icon="add" direction="left" color="accent">
         <q-fab-action
-          @click="createChat"
+          :to="{ name: 'RecipientSelector' }"
           color="primary"
           label="chat"
           label-position="left"
@@ -81,11 +81,16 @@ export default {
     },
 
     tabs() {
-      const tabs = [
+      let tabs = [
         {
           id: 0,
           name: 'all',
           label: this.$tc('utils.all')
+        },
+        {
+          id: 1,
+          name: 'group',
+          label: this.user.groupNumber
         },
         {
           id: 2,
@@ -99,12 +104,24 @@ export default {
         }
       ]
 
-      if (this.user.userRole === 'student') {
-        tabs.splice(1, 0, {
-          id: 1,
-          name: 'group',
-          label: this.user.groupNumber
-        })
+      if (this.user.userRole === 'teacher') {
+        tabs = [
+          {
+            id: 0,
+            name: 'all',
+            label: this.$tc('utils.all')
+          },
+          {
+            id: 1,
+            name: 'student',
+            label: this.$tc('student', 2)
+          },
+          {
+            id: 2,
+            name: 'teacher',
+            label: this.$tc('teacher', 2)
+          }
+        ]
       }
 
       return tabs
@@ -127,10 +144,6 @@ export default {
       } else if (info.direction === 'right') {
         this.$store.commit('ui/toggleDrawerState')
       }
-    },
-
-    createChat() {
-      console.log('new chat')
     },
 
     broadcast() {

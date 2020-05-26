@@ -7,4 +7,7 @@ const groupSchema = new Schema({
   }
 }, { collection: 'groups' })
 
-module.exports = model('groupModel', groupSchema)
+module.exports = {
+  groupSchema,
+  GroupModel: model('groupModel', groupSchema)
+}

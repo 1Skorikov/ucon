@@ -1,10 +1,10 @@
 const { Schema, model } = require('mongoose')
+const { specialtySchema } = require('./specialty.model')
 
 const facultySchema = new Schema({
-  name: {
-    type: String,
-    unique: true
-  }
+  name: String,
+  specialties: [specialtySchema]
 }, { collection: 'faculties' })
 
-module.exports = model('facultyModel', facultySchema)
+const FacultyModel = model('facultyModel', facultySchema)
+module.exports = { facultySchema, FacultyModel }

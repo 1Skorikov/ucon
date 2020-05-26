@@ -97,13 +97,14 @@
             :loading="loading"
             :disable="loading || !specialties.length"
           />
-          <q-input
+          <q-select
             v-if="form.userRole === 'student'"
-            v-model.trim="form.groupNumber"
-            lazy-rules
-            type="number"
-            label="Number of group"
-            :rules="[rules.required, ...rules.groupNumber]"
+            v-model="form.group"
+            :options="groups"
+            label="Group"
+            :rules="[rules.required]"
+            :loading="loading"
+            :disable="loading || !groups.length"
           />
         </q-step>
 
@@ -212,14 +213,11 @@ export default {
         teacherUID: uid(),
         university: null,
         faculty: null,
-        groupNumber: null,
+        group: null,
         specialty: null
       },
       rules: {
         required: val => !!val || 'Field is required',
-        groupNumber: [
-          val => (val > 0 && val < 1000000) || 'Please type a real number'
-        ],
         name: [
           val => (val.length > 1) || 'Too short'
         ],
@@ -229,7 +227,8 @@ export default {
       },
       universities: [],
       faculties: [],
-      specialties: []
+      specialties: [],
+      groups: []
     }
   },
 
@@ -241,15 +240,24 @@ export default {
       this.form.specialty = null
 
       const u = this.universities.find(e => e._id === newId)
-      this.faculties = u ? u.faculties.map(e => ({ id: e.id, label: e.name })) : []
+      this.faculties = u ? u.faculties.map(e => ({ id: e._id, label: e.name })) : []
     },
     'form.faculty.id'(newId) {
       this.specialties = []
       this.form.specialty = null
 
       const u = this.universities.find(e => e._id === this.form.university.id)
-      const f = u.faculties.find(e => e.id === newId)
-      this.specialties = f ? f.specialties.map(e => ({ id: e.id, label: e.name })) : []
+      const f = u.faculties.find(e => e._id === newId)
+      this.specialties = f ? f.specialties.map(e => ({ id: e._id, label: e.name })) : []
+    },
+    'form.specialty.id'(newId) {
+      this.groups = []
+      this.form.group = null
+
+      const u = this.universities.find(e => e._id === this.form.university.id)
+      const f = u.faculties.find(e => e._id === this.form.faculty.id)
+      const s = f.specialties.find(e => e._id === newId)
+      this.groups = s ? s.groups.map(e => ({ id: e._id, label: e.number })) : []
     }
   },
 
@@ -276,7 +284,10 @@ export default {
           id: this.form.specialty.id,
           name: this.form.specialty.label
         } : null,
-        groupNumber: isStudent ? this.form.groupNumber : null,
+        group: isStudent ? {
+          id: this.form.group.id,
+          number: this.form.group.label
+        } : null,
         fullName: this.form.fullName,
         email: this.form.email,
         userRole: this.form.userRole,

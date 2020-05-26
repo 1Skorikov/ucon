@@ -17,7 +17,7 @@
       />
       <q-input
         v-if="user.userRole === 'student'"
-        :value="user.groupNumber"
+        :value="user.group.number"
         label="Number of group"
         readonly
       />

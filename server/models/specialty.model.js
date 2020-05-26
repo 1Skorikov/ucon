@@ -4,7 +4,9 @@ const specialtySchema = new Schema({
   name: {
     type: String,
     unique: true
-  }
+  },
+  groups: [{ number: Number }]
 }, { collection: 'specialties' })
 
-module.exports = model('specialtyModel', specialtySchema)
+const SpecialtyModel = model('specialtyModel', specialtySchema)
+module.exports = { specialtySchema, SpecialtyModel }

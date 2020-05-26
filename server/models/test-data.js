@@ -1,4 +1,4 @@
-const UniversityModel = require('./university.model')
+const { UniversityModel } = require('./university.model')
 
 const universities = [
   {
@@ -10,19 +10,23 @@ const universities = [
     foundedYear: 1996,
     faculties: [
       {
-        id: 0,
         name: 'Computer Science',
         specialties: [
-          { id: 0, name: 'Software engineering' },
-          { id: 1, name: 'Computer science' }
+          {
+            name: 'Software engineering',
+            groups: [{ number: 408 }, { number: 409 }]
+          },
+          {
+            name: 'Computer science',
+            groups: [{ number: 500 }, { number: 501 }]
+          }
         ]
       },
       {
-        id: 1,
         name: 'Economics',
         specialties: [
-          { id: 0, name: 'International economics' },
-          { id: 1, name: 'Business Enterprise Economics' }
+          { name: 'International economics' },
+          { name: 'Business Enterprise Economics' }
         ]
       }
     ]

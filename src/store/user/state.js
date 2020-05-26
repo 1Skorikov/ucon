@@ -1,10 +1,12 @@
 export default function() {
   return {
     user: {
-      universityId: null,
-      facultyId: null,
-      specialtyId: null,
-      groupNumber: null,
+      university: null,
+      faculty: null,
+      specialty: null,
+      group: {
+        number: null
+      },
       fullName: null,
       email: null,
       userRole: null,

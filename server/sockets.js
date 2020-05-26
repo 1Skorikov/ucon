@@ -1,6 +1,6 @@
-const UserModel = require('./models/user.model')
-const UniversityModel = require('./models/university.model')
-const ChatModel = require('./models/chat.model')
+const { UserModel } = require('./models/user.model')
+const { UniversityModel } = require('./models/university.model')
+// const ChatModel = require('./models/chat.model')
 
 module.exports = io => {
   io.on('connection', socket => {
@@ -15,6 +15,8 @@ module.exports = io => {
       if (exist) {
         return cb(true, 'This email is already taken')
       }
+
+      console.log('signup', data)
 
       try {
         const university = await UniversityModel.findById(data.universityId)

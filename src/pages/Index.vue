@@ -81,31 +81,33 @@ export default {
     },
 
     tabs() {
-      let tabs = [
-        {
-          id: 0,
-          name: 'all',
-          label: this.$tc('utils.all')
-        },
-        {
-          id: 1,
-          name: 'group',
-          label: this.user.groupNumber
-        },
-        {
-          id: 2,
-          name: 'student',
-          label: this.$tc('student', 2)
-        },
-        {
-          id: 3,
-          name: 'teacher',
-          label: this.$tc('teacher', 2)
-        }
-      ]
+      if (this.user.userRole === 'student') {
+        return [
+          {
+            id: 0,
+            name: 'all',
+            label: this.$tc('utils.all')
+          },
+          {
+            id: 1,
+            name: 'group',
+            label: this.user.group.number
+          },
+          {
+            id: 2,
+            name: 'student',
+            label: this.$tc('student', 2)
+          },
+          {
+            id: 3,
+            name: 'teacher',
+            label: this.$tc('teacher', 2)
+          }
+        ]
+      }
 
       if (this.user.userRole === 'teacher') {
-        tabs = [
+        return [
           {
             id: 0,
             name: 'all',
@@ -124,7 +126,7 @@ export default {
         ]
       }
 
-      return tabs
+      return []
     },
 
     ...mapState('user', ['user'])

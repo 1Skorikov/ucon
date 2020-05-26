@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { facultySchema } = require('./faculty.model')
 
 const universitySchema = new Schema({
   name: {
@@ -10,7 +11,10 @@ const universitySchema = new Schema({
   address: String,
   phone: String,
   foundedYear: Number,
-  faculties: Array
+  faculties: [facultySchema]
 }, { collection: 'universities' })
 
-module.exports = model('universityModel', universitySchema)
+module.exports = {
+  universitySchema,
+  UniversityModel: model('universityModel', universitySchema)
+}

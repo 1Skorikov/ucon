@@ -1,11 +1,16 @@
 const { Schema, model } = require('mongoose')
 const bcrypt = require('bcrypt-nodejs')
 
+// const { universitySchema } = require('./university.model')
+// const { facultySchema } = require('./faculty.model')
+// const { specialtySchema } = require('./specialty.model')
+// const { groupSchema } = require('./group.model')
+
 const userSchema = new Schema({
   university: Object,
   faculty: Object,
   specialty: Object,
-  groupNumber: Number,
+  group: Object,
   fullName: String,
   email: String,
   userRole: String,
@@ -34,4 +39,7 @@ userSchema.statics = {
   }
 }
 
-module.exports = model('UserModel', userSchema)
+module.exports = {
+  userSchema,
+  UserModel: model('UserModel', userSchema)
+}

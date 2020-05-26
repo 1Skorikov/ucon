@@ -138,6 +138,8 @@ export default {
 
   watch: {
     async search(query) {
+      if (!query) return
+
       this.loading = true
       try {
         this.searchResults = await this._searchRecipient(query)

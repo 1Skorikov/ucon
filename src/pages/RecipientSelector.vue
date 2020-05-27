@@ -150,7 +150,6 @@ export default {
     },
 
     createRoom() {
-      console.log(123)
       // this.$q.loading.show()
       this.$router.push({ name: 'Chat' })
     }

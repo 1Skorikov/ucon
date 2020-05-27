@@ -38,6 +38,17 @@ const routes = [
         component: () => import('pages/SignUp.vue')
       }
     ]
+  },
+  {
+    path: '/room',
+    component: () => import('layouts/ChatLayout.vue'),
+    children: [
+      {
+        path: 'chat',
+        name: 'Chat',
+        component: () => import('pages/Chat.vue')
+      }
+    ]
   }
 ]
 

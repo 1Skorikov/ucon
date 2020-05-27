@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh lpR lFf">
-    <app-header>
+    <app-header :reveal="true">
       <template #left>
         <q-btn dense flat round icon="menu" @click="toggleDrawerState" />
       </template>

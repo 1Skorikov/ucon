@@ -2,7 +2,7 @@
   <q-header
     class="bg-primary text-white text-capitalize"
     height-hint="98"
-    reveal
+    :reveal="reveal"
   >
     <q-toolbar>
       <slot name="left" />
@@ -24,6 +24,10 @@ export default {
     title: {
       type: String,
       default: null
+    },
+    reveal: {
+      type: Boolean,
+      default: false
     }
   },
 

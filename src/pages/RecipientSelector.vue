@@ -12,6 +12,7 @@
         class="q-mb-sm"
         clickable
         v-ripple
+        @click="createRoom"
       >
         <q-item-section avatar>
           <q-avatar class="shadow-1">
@@ -32,14 +33,13 @@
 
       <q-item-label v-if="students.length" header>Students</q-item-label>
 
-      <!-- ВЫДАВАТЬ В ПОИСКЕ ЮЗЕРОВ КРОМЕ СЕБЯ!!! -->
-
       <q-item
         v-for="user in students"
         :key="user._id"
         class="q-my-sm"
         clickable
         v-ripple
+        @click="createRoom"
       >
         <q-item-section avatar>
           <q-avatar class="shadow-1" color="primary" text-color="white">
@@ -50,7 +50,7 @@
         <q-item-section>
           <q-item-label>{{ user.fullName }}</q-item-label>
           <q-item-label caption lines="1">
-            {{ user.specialty.name }}
+            {{ `${user.specialty.name}, ${user.group.number} group` }}
           </q-item-label>
         </q-item-section>
 
@@ -103,10 +103,10 @@ export default {
 
   computed: {
     students() {
-      return this.searchResults.filter(e => e.userRole === 'student')
+      return this.searchResults.filter(e => e.userRole === 'student' && e._id !== this.me._id)
     },
     teachers() {
-      return this.searchResults.filter(e => e.userRole === 'teacher')
+      return this.searchResults.filter(e => e.userRole === 'teacher' && e._id !== this.me._id)
     },
     ...mapGetters('user', ['me'])
   },
@@ -147,6 +147,12 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+
+    createRoom() {
+      console.log(123)
+      // this.$q.loading.show()
+      this.$router.push({ name: 'Chat' })
     }
   }
 }

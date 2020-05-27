@@ -1,54 +1,61 @@
 <template>
   <q-page style="padding-top: 50px;">
     <q-list>
-      <q-item-label header>Users</q-item-label>
+      <template v-if="teachers.length">
+        <q-separator />
+        <q-item-label header>Teachers</q-item-label>
+      </template>
 
       <q-item
-        v-for="contact in contacts"
-        :key="contact.id"
-        class="q-my-sm"
-        clickable
-        v-ripple
-      >
-        <q-item-section avatar>
-          <q-avatar color="primary" text-color="white">
-            {{ contact.letter }}
-          </q-avatar>
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label>{{ contact.name }}</q-item-label>
-          <q-item-label caption lines="1">{{ contact.email }}</q-item-label>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-icon name="chat_bubble" color="green" />
-        </q-item-section>
-      </q-item>
-
-      <q-separator />
-      <q-item-label header>Groups</q-item-label>
-
-      <q-item
-        v-for="contact in offline"
-        :key="contact.id"
+        v-for="user in teachers"
+        :key="user._id"
         class="q-mb-sm"
         clickable
         v-ripple
       >
         <q-item-section avatar>
-          <q-avatar>
-            <img :src="`https://cdn.quasar.dev/img/${contact.avatar}`" />
+          <q-avatar class="shadow-1">
+            <!-- <img :src="`https://cdn.quasar.dev/img/${user.avatar}`" /> -->
+            {{ user.fullName.charAt(0) }}
           </q-avatar>
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{ contact.name }}</q-item-label>
-          <q-item-label caption lines="1">{{ contact.email }}</q-item-label>
+          <q-item-label>{{ user.fullName }}</q-item-label>
+          <q-item-label caption lines="1">{{ user.faculty.name }}</q-item-label>
         </q-item-section>
 
         <q-item-section side>
-          <q-icon name="chat_bubble" color="grey" />
+          <q-icon name="chat_bubble" color="secondary" />
+        </q-item-section>
+      </q-item>
+
+      <q-item-label v-if="students.length" header>Students</q-item-label>
+
+      <!-- ВЫДАВАТЬ В ПОИСКЕ ЮЗЕРОВ КРОМЕ СЕБЯ!!! -->
+
+      <q-item
+        v-for="user in students"
+        :key="user._id"
+        class="q-my-sm"
+        clickable
+        v-ripple
+      >
+        <q-item-section avatar>
+          <q-avatar class="shadow-1" color="primary" text-color="white">
+            {{ user.fullName.charAt(0) }}
+          </q-avatar>
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label>{{ user.fullName }}</q-item-label>
+          <q-item-label caption lines="1">
+            {{ user.specialty.name }}
+          </q-item-label>
+        </q-item-section>
+
+        <q-item-section side>
+          <q-icon name="chat_bubble" color="secondary" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -81,69 +88,60 @@
 </template>
 
 <script>
-const contacts = [
-  {
-    id: 1,
-    name: 'Ruddy Jedrzej',
-    email: 'rjedrzej0@discuz.net',
-    letter: 'R'
-  },
-  {
-    id: 2,
-    name: 'Mallorie Alessandrini',
-    email: 'malessandrini1@marketwatch.com',
-    letter: 'M'
-  },
-  {
-    id: 3,
-    name: 'Elisabetta Wicklen',
-    email: 'ewicklen2@microsoft.com',
-    letter: 'E'
-  },
-  {
-    id: 4,
-    name: 'Seka Fawdrey',
-    email: 'sfawdrey3@wired.com',
-    letter: 'S'
-  }
-]
-
-const offline = [
-  {
-    id: 5,
-    name: 'Brunhilde Panswick',
-    email: 'bpanswick4@csmonitor.com',
-    avatar: 'avatar2.jpg'
-  },
-  {
-    id: 6,
-    name: 'Winfield Stapforth',
-    email: 'wstapforth5@pcworld.com',
-    avatar: 'avatar6.jpg'
-  }
-]
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'RecipientSelector',
 
   data() {
     return {
-      contacts,
-      offline,
       search: '',
       loading: false,
       searchResults: []
     }
   },
 
+  computed: {
+    students() {
+      return this.searchResults.filter(e => e.userRole === 'student')
+    },
+    teachers() {
+      return this.searchResults.filter(e => e.userRole === 'teacher')
+    },
+    ...mapGetters('user', ['me'])
+  },
+
   watch: {
     async search(query) {
-      if (!query) return
+      if (!query) {
+        return this.fetchDefaultRecipients()
+      }
 
       this.loading = true
       try {
         this.searchResults = await this._searchRecipient(query)
-        console.log('Result:', this.searchResults)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    }
+  },
+
+  mounted() {
+    this.fetchDefaultRecipients()
+  },
+
+  methods: {
+    async fetchDefaultRecipients() {
+      this.loading = true
+      try {
+        if (this.me.userRole === 'student') {
+          this.searchResults = await this._searchRecipientByGroup(this.me.group.id)
+        } else {
+          console.log(this.me.faculty.id)
+          this.searchResults = await this._searchRecipientByFaculty(this.me.faculty.id)
+        }
       } catch (err) {
         console.error(err)
       } finally {

@@ -51,6 +51,22 @@ export default {
       })
     },
 
+    _getUser(id) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('get:user', id, (err, res) => {
+          if (err) {
+            notify('negative', err)
+            this.$router.push({ name: 'SignIn' })
+            this.$q.localStorage.set('userId', '')
+            this.$q.localStorage.set('userLoggedIn', false)
+            return reject(err)
+          }
+
+          resolve(res)
+        })
+      })
+    },
+
     _getUniversities() {
       return new Promise((resolve, reject) => {
         this.$socket.emit('get:universities', (err, data) => {
@@ -69,6 +85,32 @@ export default {
         this.$socket.emit('search:recipient', query, (err, data) => {
           if (err) {
             notify('negative', err)
+            return reject(data)
+          }
+
+          resolve(data)
+        })
+      })
+    },
+
+    _searchRecipientByGroup(id) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('search:recipientByGroup', id, (err, data) => {
+          if (err) {
+            notify('negative', data)
+            return reject(data)
+          }
+
+          resolve(data)
+        })
+      })
+    },
+
+    _searchRecipientByFaculty(id) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('search:recipientByFaculty', id, (err, data) => {
+          if (err) {
+            notify('negative', data)
             return reject(data)
           }
 

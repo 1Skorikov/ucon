@@ -18,26 +18,19 @@ export default {
   },
 
   methods: {
-    fetchData() {
+    async fetchData() {
+      this.$q.loading.show()
       const userId = this.$q.localStorage.getItem('userId')
-      if (!userId) return
+      if (!userId) return this.$q.loading.hide()
 
-      this.$socket.emit('get:user',
-        userId,
-        (err, res) => {
-          if (err) {
-            console.error(err, res)
-            this.$q.localStorage.set('userId', '')
-            this.$q.localStorage.set('userLoggedIn', false)
-            this.$router.push({ name: 'SignIn' })
-          }
-        }
-      )
+      try {
+        await this._getUser(userId)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        this.$q.loading.hide()
+      }
     }
-  },
-
-  computed: {
-    ...mapState('user', ['user'])
   }
 }
 </script>

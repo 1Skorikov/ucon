@@ -58,6 +58,7 @@ module.exports = io => {
         const user = await UserModel.findById(userId).select('-passwordHash')
         if (!user) return cb(true, 'Can not find user')
         socket.emit('initUser', user)
+        cb(false, user)
       } catch (err) {
         cb(true, err)
       }
@@ -74,15 +75,37 @@ module.exports = io => {
       }
     })
 
-    // socket.on('newChat', async function(data, cb) {
-    //   if (!data.chatName) return cb(true, 'invalidData')
+    socket.on('search:recipientByGroup', async function(id, cb) {
+      if (!id) return cb(true, 'invalid query')
 
-    //   try {
-    //     const chat = await ChatModel.create(data)
-    //     console.log('chat', chat)
-    //   } catch (err) {
-    //     console.log(err)
-    //   }
-    // })
+      try {
+        const recipients = await UserModel.find({ 'group.id': id })
+        cb(false, recipients)
+      } catch (err) {
+        cb(true, 'Can not find')
+      }
+    })
+
+    socket.on('search:recipientByFaculty', async function(id, cb) {
+      if (!id) return cb(true, 'invalid query')
+
+      try {
+        const recipients = await UserModel.find({ 'faculty.id': id })
+        cb(false, recipients)
+      } catch (err) {
+        cb(true, 'Can not find')
+      }
+    })
+
+    socket.on('newChat', async function(data, cb) {
+      if (!data.chatName) return cb(true, 'invalidData')
+
+      try {
+        const chat = await ChatModel.create(data)
+        console.log('chat', chat)
+      } catch (err) {
+        console.log(err)
+      }
+    })
   })
 }

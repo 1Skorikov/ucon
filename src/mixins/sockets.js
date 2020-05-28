@@ -117,6 +117,19 @@ export default {
           resolve(data)
         })
       })
+    },
+
+    _newRoom(params) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('newRoom', params, (err, data) => {
+          if (err) {
+            notify('negative', data)
+            return reject(data)
+          }
+
+          resolve(data)
+        })
+      })
     }
   }
 }

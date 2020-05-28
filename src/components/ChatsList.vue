@@ -8,7 +8,6 @@
     >
       <q-item-section avatar>
         <q-avatar size="48px" class="shadow-1">
-          <img v-if="chat.user.avatar" :src="chat.user.avatar" />
           <span>{{ chat.user.fullName.charAt(0) }}</span>
         </q-avatar>
       </q-item-section>

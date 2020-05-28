@@ -12,7 +12,7 @@
         v-model="activeTabName"
         dense
         align="justify"
-        class="full-width text-white bg-primary shadow-2"
+        class="full-width text-white bg-primary"
       >
         <q-tab
           v-for="tab in tabs"
@@ -63,7 +63,6 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('chats/getUserChats')
   },
 
   computed: {

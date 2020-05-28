@@ -31,3 +31,8 @@ export function getUserChats({ commit }) {
 
   commit('updateUserChats', chats)
 }
+
+export function SA_initChats({ commit }, payload) {
+  console.log('SA_initChats', payload)
+  commit('initChats', payload)
+}

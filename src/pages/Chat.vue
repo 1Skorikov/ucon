@@ -2,7 +2,13 @@
   <q-page class="chat-page row justify-center">
     <q-scroll-area
       class="q-pr-sm q-pl-sm"
-      style="height: calc(100vh - 50px); width: 100%;"
+      style="height: calc(100vh - 100px); width: 100%;"
+      :thumb-style="{
+        right: '2px',
+        borderRadius: '5px',
+        width: '4px',
+        opacity: 0.5
+      }"
       ref="scrollArea"
     >
       <div v-for="(item, i) in 20" :key="i">
@@ -63,6 +69,7 @@ export default {
 
 <style lang="scss" scoped>
 .chat-page {
-  background-color: $bg-color;
+  // background-color: $bg-color;
+  background-color: #f6f8fa;
 }
 </style>

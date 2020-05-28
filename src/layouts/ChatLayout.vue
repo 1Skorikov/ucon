@@ -6,9 +6,11 @@
       </template>
     </app-header>
 
-    <q-page-container>
+  <q-page-container>
       <router-view />
     </q-page-container>
+
+    <chat-input />
   </q-layout>
 </template>
 
@@ -17,13 +19,8 @@ export default {
   name: 'Chat',
 
   components: {
-    AppHeader: () => import('components/global/AppHeader')
-  },
-
-  data() {
-    return {
-      leftDrawer: true
-    }
+    AppHeader: () => import('components/global/AppHeader'),
+    ChatInput: () => import('components/ChatInput')
   }
 }
 </script>

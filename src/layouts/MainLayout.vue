@@ -2,7 +2,22 @@
   <q-layout view="lHh lpR lFf">
     <app-header :reveal="true">
       <template #left>
-        <q-btn dense flat round icon="menu" @click="toggleDrawerState" />
+        <q-btn
+          v-if="$route.name === 'Chats'"
+          dense
+          flat
+          round
+          icon="menu"
+          @click="toggleDrawerState"
+        />
+        <q-btn
+          v-else
+          dense
+          flat
+          round
+          icon="arrow_back_ios"
+          @click="$router.back()"
+        />
       </template>
     </app-header>
 

@@ -1,6 +1,6 @@
 const { UserModel } = require('./models/user.model')
 const { UniversityModel } = require('./models/university.model')
-// const ChatModel = require('./models/chat.model')
+const { RoomModel } = require('./models/room.model')
 
 module.exports = io => {
   io.on('connection', socket => {
@@ -15,8 +15,6 @@ module.exports = io => {
       if (exist) {
         return cb(true, 'This email is already taken')
       }
-
-      console.log('signup', data)
 
       try {
         const university = await UniversityModel.findById(data.universityId)
@@ -68,7 +66,7 @@ module.exports = io => {
       if (!query) return cb(true, 'invalid query')
 
       try {
-        const recipients = await UserModel.findByName(query)
+        const recipients = await UserModel.findByName(query).select('-passwordHash')
         cb(false, recipients)
       } catch (err) {
         cb(true, 'Can not find')
@@ -79,7 +77,7 @@ module.exports = io => {
       if (!id) return cb(true, 'invalid query')
 
       try {
-        const recipients = await UserModel.find({ 'group.id': id })
+        const recipients = await UserModel.find({ 'group.id': id }).select('-passwordHash')
         cb(false, recipients)
       } catch (err) {
         cb(true, 'Can not find')
@@ -90,22 +88,30 @@ module.exports = io => {
       if (!id) return cb(true, 'invalid query')
 
       try {
-        const recipients = await UserModel.find({ 'faculty.id': id })
+        const recipients = await UserModel.find({ 'faculty.id': id }).select('-passwordHash')
         cb(false, recipients)
       } catch (err) {
         cb(true, 'Can not find')
       }
     })
 
-    socket.on('newChat', async function(data, cb) {
-      if (!data.chatName) return cb(true, 'invalidData')
+    socket.on('newRoom', async function(data, cb) {
+      if (!data.users.length) return cb(true, 'invalidData')
+
+      let room = null
 
       try {
-        const chat = await ChatModel.create(data)
-        console.log('chat', chat)
+        const users = await UserModel.findById(data.users)
+        console.log(users)
+        room = await RoomModel.create(data)
+        // cb(false, room)
+        // io.emit('initChats', [room])
       } catch (err) {
-        console.log(err)
+        console.error(err)
+        cb(true, err)
       }
+
+      cb(false, room)
     })
   })
 }

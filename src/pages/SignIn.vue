@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <app-header>
+    <app-header :reveal="true">
       <template #right>
         <q-btn
           to="/e/sign-up"

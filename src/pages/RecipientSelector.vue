@@ -12,7 +12,7 @@
         class="q-mb-sm"
         clickable
         v-ripple
-        @click="createRoom"
+        @click="createRoom(user)"
       >
         <q-item-section avatar>
           <q-avatar class="shadow-1">
@@ -39,7 +39,7 @@
         class="q-my-sm"
         clickable
         v-ripple
-        @click="createRoom"
+        @click="createRoom(user)"
       >
         <q-item-section avatar>
           <q-avatar class="shadow-1" color="primary" text-color="white">
@@ -149,8 +149,19 @@ export default {
       }
     },
 
-    createRoom() {
-      // this.$q.loading.show()
+    async createRoom(user) {
+      this.$q.loading.show()
+
+      try {
+        await this._newRoom({
+          type: 'private',
+          users: [this.me._id, user._id]
+        })
+      } catch (err) {
+        console.error(err)
+      }
+
+      this.$q.loading.hide()
       this.$router.push({ name: 'Chat' })
     }
   }

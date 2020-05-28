@@ -13,13 +13,17 @@ export default {
 
   mixins: [sockets],
 
-  created() {
-    this.fetchData()
+  async created() {
+    this.$q.loading.show()
+    await this.fetchUser()
+    setTimeout(() => {
+      this.fetchChats()
+    }, 2000)
+    this.$q.loading.hide()
   },
 
   methods: {
-    async fetchData() {
-      this.$q.loading.show()
+    async fetchUser() {
       const userId = this.$q.localStorage.getItem('userId')
       if (!userId) return this.$q.loading.hide()
 
@@ -27,8 +31,19 @@ export default {
         await this._getUser(userId)
       } catch (err) {
         console.log(err)
-      } finally {
-        this.$q.loading.hide()
+      }
+    },
+
+    async fetchChats() {
+      const userId = this.$q.localStorage.getItem('userId')
+      if (!userId) return this.$q.loading.hide()
+
+      try {
+        const chats = await this._getChats(userId)
+        console.log(userId)
+        console.log('Chats found - ', chats)
+      } catch (err) {
+        console.log(err)
       }
     }
   }

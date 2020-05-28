@@ -18,7 +18,6 @@
         </q-item-label>
 
         <q-item-label caption>
-          <q-icon name="check" v-if="chat.lastMessage.sent" />
           {{ chat.lastMessage.text }}
         </q-item-label>
       </q-item-section>

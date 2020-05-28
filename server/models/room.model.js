@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { userSchema } = require('./user.model')
 
 const roomSchema = new Schema({
   name: String,
@@ -9,7 +10,8 @@ const roomSchema = new Schema({
     time: Date,
     user: Object
   },
-  users: Object
+  usersIds: Array,
+  users: [userSchema]
 }, { collection: 'rooms' })
 
 module.exports = {

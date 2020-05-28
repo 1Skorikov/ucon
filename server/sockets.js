@@ -1,6 +1,7 @@
 const { UserModel } = require('./models/user.model')
 const { UniversityModel } = require('./models/university.model')
 const { RoomModel } = require('./models/room.model')
+const { Types } = require('mongoose')
 
 module.exports = io => {
   io.on('connection', socket => {
@@ -62,6 +63,18 @@ module.exports = io => {
       }
     })
 
+    socket.on('get:chats', async function(userId, cb) {
+      try {
+        console.log('get:chats', userId)
+        const chats = await RoomModel.find({ users: { $elemMatch: { _id: Types.ObjectId(userId) } } })
+
+        socket.emit('initChats', chats)
+        cb(false, chats)
+      } catch (err) {
+        cb(true, err)
+      }
+    })
+
     socket.on('search:recipient', async function(query, cb) {
       if (!query) return cb(true, 'invalid query')
 
@@ -101,11 +114,15 @@ module.exports = io => {
       let room = null
 
       try {
-        const users = await UserModel.findById(data.users)
-        console.log(users)
-        room = await RoomModel.create(data)
-        // cb(false, room)
-        // io.emit('initChats', [room])
+        const users = await UserModel.find({ _id: { $in: data.users } })
+        room = await RoomModel.create({
+          ...data,
+          usersIds: data.users,
+          users
+        })
+        console.log('room', room)
+        cb(false, room)
+        io.emit('initChats', [room])
       } catch (err) {
         console.error(err)
         cb(true, err)

@@ -33,6 +33,5 @@ export function getUserChats({ commit }) {
 }
 
 export function SA_initChats({ commit }, payload) {
-  console.log('SA_initChats', payload)
   commit('initChats', payload)
 }

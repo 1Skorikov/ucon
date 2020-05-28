@@ -130,6 +130,19 @@ export default {
           resolve(data)
         })
       })
+    },
+
+    _getChats(userId) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('get:chats', userId, (err, data) => {
+          if (err) {
+            notify('negative', data)
+            return reject(data)
+          }
+
+          resolve(data)
+        })
+      })
     }
   }
 }

@@ -23,7 +23,6 @@ export default {
 
           this.$q.localStorage.set('userLoggedIn', true)
           this.$q.localStorage.set('userId', res._id)
-          this.$router.push({ name: 'Chats' })
           resolve(res)
         })
       })

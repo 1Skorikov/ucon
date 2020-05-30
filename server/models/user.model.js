@@ -7,6 +7,7 @@ const userSchema = new Schema({
   specialty: Object,
   group: Object,
   fullName: String,
+  initials: String,
   email: String,
   userRole: String,
   teacherUID: String,
@@ -18,6 +19,13 @@ userSchema.virtual('password')
     this.passwordHash = this.encryptPassword(password)
   })
   .get(() => 'secure password')
+
+userSchema.virtual('name')
+  .set(function(name) {
+    this.fullName = name
+    this.initials = name.split(' ').map(e => e.charAt(0)).join('.')
+  })
+  .get(function() { return this.fullName })
 
 userSchema.methods = {
   encryptPassword: function(password) {

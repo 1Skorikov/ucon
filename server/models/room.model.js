@@ -11,7 +11,8 @@ const roomSchema = new Schema({
     user: Object
   },
   usersIds: Array,
-  users: [userSchema]
+  users: [userSchema],
+  interlocutor: userSchema
 }, { collection: 'rooms' })
 
 module.exports = {

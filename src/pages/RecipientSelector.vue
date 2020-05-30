@@ -1,6 +1,6 @@
 <template>
   <q-page style="padding-top: 50px;">
-    <q-list>
+    <q-list v-if="[...students, ...teachers].length && !loading" key="list">
       <template v-if="teachers.length">
         <q-separator />
         <q-item-label header>Teachers</q-item-label>
@@ -60,6 +60,18 @@
       </q-item>
     </q-list>
 
+    <div v-else class="users-list--empty" key="list-empty">
+      <q-img
+        style="width: 90%;"
+        src="statics/backgrounds/empty-list.png"
+        spinner-color="white"
+        class="text-center"
+      />
+      <h3 class="text-subtitle1 text-center">
+        We did not find any users
+      </h3>
+    </div>
+
     <q-page-sticky expand position="top">
       <q-toolbar class="bg-primary text-white shadow-2">
         <q-input
@@ -67,7 +79,7 @@
           dense
           standout
           v-model="search"
-          debounce="1000"
+          debounce="700"
           style="width: 100%;"
           :loading="loading"
           placeholder="Search by user or group name"
@@ -139,7 +151,6 @@ export default {
         if (this.me.userRole === 'student') {
           this.searchResults = await this._searchRecipientByGroup(this.me.group.id)
         } else {
-          console.log(this.me.faculty.id)
           this.searchResults = await this._searchRecipientByFaculty(this.me.faculty.id)
         }
       } catch (err) {
@@ -155,6 +166,8 @@ export default {
       try {
         await this._newRoom({
           type: 'private',
+          me: this.me._id,
+          interlocutor: user._id,
           users: [this.me._id, user._id]
         })
       } catch (err) {
@@ -167,3 +180,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.users-list--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px 20px;
+}
+</style>

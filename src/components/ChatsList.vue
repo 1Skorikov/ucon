@@ -1,37 +1,16 @@
 <template>
   <q-list>
-    <q-item
-      v-for="chat in userChats(activeChatsList)"
-      :key="chat.id"
-      clickable
-      v-ripple
-    >
-      <q-item-section avatar>
-        <q-avatar size="48px" class="shadow-1">
-          <span>{{ chat.user.fullName.charAt(0) }}</span>
-        </q-avatar>
-      </q-item-section>
+    <chats-list-item v-for="chat in chats" :key="chat.id" :chat="chat" />
 
-      <q-item-section>
-        <q-item-label class="text-bold" lines="1">
-          {{ chat.user.fullName }}
-        </q-item-label>
-
-        <q-item-label caption>
-          {{ chat.lastMessage.text }}
-        </q-item-label>
-      </q-item-section>
-
-      <q-item-section side>
-        <q-item-label>
-          {{ chat.lastMessage.time }}
-        </q-item-label>
-
-        <q-item-label v-if="chat.unreadCount">
-          <q-badge color="secondary">{{ chat.unreadCount }}</q-badge>
-        </q-item-label>
-      </q-item-section>
-    </q-item>
+    <div v-if="!chats.length" class="chats-list--empty">
+      <q-img
+        style="width: 80%;"
+        src="statics/backgrounds/no-messages.png"
+        spinner-color="white"
+        class="text-center"
+      />
+      <h3 class="text-subtitle2 text-center">No chats yet ...</h3>
+    </div>
   </q-list>
 </template>
 
@@ -41,9 +20,25 @@ import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'ChatsList',
 
+  components: {
+    ChatsListItem: () => import('components/ChatsListItem')
+  },
+
   computed: {
+    chats() {
+      return this.userChats(this.activeChatsList)
+    },
+
     ...mapGetters('chats', ['userChats']),
     ...mapState('ui', ['activeChatsList'])
   }
 }
 </script>
+
+<style lang="scss">
+.chats-list--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

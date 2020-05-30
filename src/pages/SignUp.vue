@@ -288,7 +288,7 @@ export default {
           id: this.form.group.id,
           number: this.form.group.label
         } : null,
-        fullName: this.form.fullName,
+        name: this.form.fullName,
         email: this.form.email,
         userRole: this.form.userRole,
         teacherUID: !isStudent ? this.form.teacherUID : null,

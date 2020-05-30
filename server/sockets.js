@@ -65,11 +65,31 @@ module.exports = io => {
 
     socket.on('get:chats', async function(userId, cb) {
       try {
-        console.log('get:chats', userId)
-        const chats = await RoomModel.find({ users: { $elemMatch: { _id: Types.ObjectId(userId) } } })
+        const chats = await RoomModel.find({
+          users: { $elemMatch: { _id: Types.ObjectId(userId) } }
+        })
 
-        socket.emit('initChats', chats)
-        cb(false, chats)
+        const tmpChats = []
+
+        for (let i = 0; i < chats.length; i++) {
+          const c = chats[i]
+
+          if (c.type === 'private') {
+            const inter = await UserModel.findById(
+              Types.ObjectId(c.usersIds.find(c => c !== userId))
+            )
+
+            tmpChats.push({
+              ...c._doc,
+              interlocutor: inter
+            })
+          } else {
+            tmpChats.push(c)
+          }
+        }
+
+        socket.emit('initChats', tmpChats)
+        cb(false, tmpChats)
       } catch (err) {
         cb(true, err)
       }
@@ -115,20 +135,21 @@ module.exports = io => {
 
       try {
         const users = await UserModel.find({ _id: { $in: data.users } })
+        const interlocutor = await UserModel.findById(data.interlocutor)
+
         room = await RoomModel.create({
           ...data,
+          interlocutor,
           usersIds: data.users,
           users
         })
-        console.log('room', room)
+
         cb(false, room)
         io.emit('initChats', [room])
       } catch (err) {
         console.error(err)
         cb(true, err)
       }
-
-      cb(false, room)
     })
   })
 }

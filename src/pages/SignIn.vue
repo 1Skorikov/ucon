@@ -54,13 +54,44 @@ export default {
   },
 
   methods: {
-    onSubmit() {
-      this._login(this.form)
+    async onSubmit() {
+      this.$q.loading.show()
+      try {
+        await this._login(this.form)
+        await this.fetchUser()
+        await this.fetchChats()
+      } catch (err) {
+        console.error(err)
+      }
+      this.$q.loading.hide()
+      this.$router.push({ name: 'Chats' })
     },
 
     isValidEmail(val) {
       const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/
       return emailPattern.test(val) || 'Invalid email'
+    },
+
+    async fetchUser() {
+      const userId = this.$q.localStorage.getItem('userId')
+      if (!userId) return this.$q.loading.hide()
+
+      try {
+        await this._getUser(userId)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+
+    async fetchChats() {
+      const userId = this.$q.localStorage.getItem('userId')
+      if (!userId) return this.$q.loading.hide()
+
+      try {
+        const chats = await this._getChats(userId)
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }

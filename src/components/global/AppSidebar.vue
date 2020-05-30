@@ -36,14 +36,10 @@
       </q-list>
     </q-scroll-area>
 
-    <q-img
-      class="absolute-top"
-      :src="userInfo.sidebarBgc"
-      style="height: 150px"
-    >
+    <q-img class="absolute-top" :src="sidebarBgc" style="height: 150px">
       <div class="absolute-bottom bg-transparent">
-        <q-avatar size="56px" class="q-mb-sm">
-          <img :src="userInfo.photoUrl" />
+        <q-avatar size="56px" class="q-mb-sm bg-secondary">
+          {{ me.initials }}
         </q-avatar>
         <div class="text-weight-bold">{{ me.fullName }}</div>
         <div>{{ me.email }}</div>
@@ -59,12 +55,7 @@ export default {
   name: 'AppSidebar',
 
   data: () => ({
-    userInfo: {
-      sidebarBgc: 'statics/backgrounds/sidebar-background.jpg',
-      photoUrl: 'https://cdn.quasar.dev/img/boy-avatar.png',
-      name: 'Ivan Skorikov',
-      nickname: 'gagaledi'
-    }
+    sidebarBgc: 'statics/backgrounds/sidebar-background.jpg'
   }),
 
   computed: {

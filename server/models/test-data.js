@@ -30,32 +30,32 @@ const universities = [
         ]
       }
     ]
-  },
-  {
-    name: 'National Technical University of Ukraine (Igor Sikorsky Kyiv Polytechnic Institute)',
-    site: 'https://kpi.ua/',
-    country: 'Ukraine',
-    address: 'Peremohy Ave, 37, Kyiv, 03056',
-    phone: '0442049645',
-    faculties: [
-      {
-        id: 0,
-        name: 'Chemical Engineering',
-        specialties: [
-          { id: 0, name: 'Ecology' },
-          { id: 1, name: 'Applied mechanics' }
-        ]
-      },
-      {
-        id: 1,
-        name: 'Physics and Mathematics',
-        specialties: [
-          { id: 0, name: 'Physics and astronomy' },
-          { id: 1, name: 'Mathematics' }
-        ]
-      }
-    ]
   }
+  // {
+  //   name: 'National Technical University of Ukraine (Igor Sikorsky Kyiv Polytechnic Institute)',
+  //   site: 'https://kpi.ua/',
+  //   country: 'Ukraine',
+  //   address: 'Peremohy Ave, 37, Kyiv, 03056',
+  //   phone: '0442049645',
+  //   faculties: [
+  //     {
+  //       id: 0,
+  //       name: 'Chemical Engineering',
+  //       specialties: [
+  //         { id: 0, name: 'Ecology' },
+  //         { id: 1, name: 'Applied mechanics' }
+  //       ]
+  //     },
+  //     {
+  //       id: 1,
+  //       name: 'Physics and Mathematics',
+  //       specialties: [
+  //         { id: 0, name: 'Physics and astronomy' },
+  //         { id: 1, name: 'Mathematics' }
+  //       ]
+  //     }
+  //   ]
+  // }
 ]
 
 module.exports = () => {

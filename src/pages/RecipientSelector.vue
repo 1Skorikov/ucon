@@ -164,18 +164,24 @@ export default {
       this.$q.loading.show()
 
       try {
-        await this._newRoom({
+        const newRoom = await this._newRoom({
           type: 'private',
           me: this.me._id,
           interlocutor: user._id,
           users: [this.me._id, user._id]
+        })
+
+        this.$router.push({
+          name: 'Chat',
+          params: {
+            id: newRoom._id
+          }
         })
       } catch (err) {
         console.error(err)
       }
 
       this.$q.loading.hide()
-      this.$router.push({ name: 'Chat' })
     }
   }
 }

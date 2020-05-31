@@ -4,12 +4,13 @@
 
     <div v-if="!chats.length" class="chats-list--empty">
       <q-img
-        style="width: 80%;"
+        basic
+        style="width: 80%; max-width: 500px;"
         src="statics/backgrounds/no-messages.png"
         spinner-color="white"
         class="text-center"
       />
-      <h3 class="text-subtitle2 text-center">No chats yet ...</h3>
+      <h3 class="text-subtitle2 text-grey text-center">No chats yet ...</h3>
     </div>
   </q-list>
 </template>
@@ -40,5 +41,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 20px;
 }
 </style>

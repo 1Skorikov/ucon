@@ -41,12 +41,15 @@ const routes = [
   },
   {
     path: '/room',
+    name: 'Room',
     component: () => import('layouts/ChatLayout.vue'),
+    props: true,
     children: [
       {
         path: 'chat',
         name: 'Chat',
-        component: () => import('pages/Chat.vue')
+        component: () => import('pages/Chat.vue'),
+        props: true
       }
     ]
   }

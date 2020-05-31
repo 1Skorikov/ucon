@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable v-ripple>
+  <q-item clickable v-ripple @click="openChat">
     <q-item-section avatar>
       <q-avatar size="48px" class="shadow-1">
         <span>{{ chatInfo.initials }}</span>
@@ -30,6 +30,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { date } from 'quasar'
 
 export default {
   name: 'ChatsListItem',
@@ -43,10 +44,17 @@ export default {
 
   computed: {
     chatInfo() {
+      const lastMessage = this.chat.lastMessage
+      const formattedString = date.formatDate(lastMessage.time, 'hh:mm')
+
       if (this.chat.type === 'private') {
         return {
           fullName: this.chat.interlocutor.fullName,
-          lastMessage: this.chat.lastMessage || '',
+          lastMessage: {
+            text: lastMessage.text,
+            time: formattedString,
+            user: lastMessage.user
+          },
           unreadCount: this.chat.unreadCount || 0,
           initials: this.chat.interlocutor.initials
         }
@@ -56,6 +64,17 @@ export default {
     },
 
     ...mapGetters('user', ['me'])
+  },
+
+  methods: {
+    openChat() {
+      this.$router.push({
+        name: 'Chat',
+        params: {
+          id: this.chat._id
+        }
+      })
+    }
   }
 }
 </script>

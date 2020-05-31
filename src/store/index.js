@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import chats from './chats'
+import messages from './messages'
 import ui from './ui'
 import user from './user'
 
@@ -21,7 +22,8 @@ export default function(/* { ssrContext } */) {
     modules: {
       ui,
       user,
-      chats
+      chats,
+      messages
     },
 
     // enable strict mode (adds overhead!)

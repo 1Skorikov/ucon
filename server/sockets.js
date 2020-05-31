@@ -134,14 +134,21 @@ module.exports = io => {
       let room = null
 
       try {
-        const users = await UserModel.find({ _id: { $in: data.users } })
+        const user = await UserModel.findById(data.me)
         const interlocutor = await UserModel.findById(data.interlocutor)
+
+        console.log('new room', data, user, interlocutor)
 
         room = await RoomModel.create({
           ...data,
           interlocutor,
           usersIds: data.users,
-          users
+          users: [user, interlocutor],
+          lastMessage: {
+            text: `${user.fullName} created a chat`,
+            time: new Date(),
+            user
+          }
         })
 
         cb(false, room)
@@ -150,6 +157,14 @@ module.exports = io => {
         console.error(err)
         cb(true, err)
       }
+    })
+
+    socket.on('subscribe', room => socket.join(room))
+
+    socket.on('unsubscribe', room => socket.leave(room))
+
+    socket.on('newMessage', async function(data, cb) {
+      if (!data.text) return cb(true, 'invalidData')
     })
   })
 }

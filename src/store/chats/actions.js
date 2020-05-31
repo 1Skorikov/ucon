@@ -14,7 +14,7 @@ export function getUserChats({ commit }) {
       lastMessage: {
         text: faker.random.arrayElement([faker.lorem.sentence(), '']),
         time: formattedString,
-        sent: faker.random.boolean(), // show check icon only if current user === user in this obj
+        sent: faker.random.boolean(),
         user: {}
       },
       user: {

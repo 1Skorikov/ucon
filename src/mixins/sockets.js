@@ -31,6 +31,7 @@ export default {
     _logout() {
       this.$q.localStorage.set('userLoggedIn', false)
       this.$q.localStorage.set('userId', '')
+      this.$store.commit('chats/initChats', [])
       this.$router.push({ name: 'SignIn' })
     },
 

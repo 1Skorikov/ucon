@@ -14,7 +14,6 @@ export default {
   mixins: [sockets],
 
   async created() {
-    console.log(123)
     this.$q.loading.show()
     await this.fetchUser()
     await this.fetchChats()
@@ -29,7 +28,7 @@ export default {
       try {
         await this._getUser(userId)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     },
 
@@ -40,7 +39,7 @@ export default {
       try {
         const chats = await this._getChats(userId)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       }
     }
   }

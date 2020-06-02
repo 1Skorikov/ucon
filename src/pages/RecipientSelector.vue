@@ -1,76 +1,85 @@
 <template>
   <q-page style="padding-top: 50px;">
-    <q-list v-if="[...students, ...teachers].length && !loading" key="list">
-      <template v-if="teachers.length">
-        <q-separator />
-        <q-item-label header>Teachers</q-item-label>
-      </template>
+    <transition
+      appear
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+      mode="out-in"
+    >
+      <q-list v-if="[...students, ...teachers].length && !loading" key="list">
+        <template v-if="teachers.length">
+          <q-separator />
+          <q-item-label header>Teachers</q-item-label>
+        </template>
 
-      <q-item
-        v-for="user in teachers"
-        :key="user._id"
-        class="q-mb-sm"
-        clickable
-        v-ripple
-        @click="createRoom(user)"
-      >
-        <q-item-section avatar>
-          <q-avatar class="shadow-1">
-            <!-- <img :src="`https://cdn.quasar.dev/img/${user.avatar}`" /> -->
-            {{ user.fullName.charAt(0) }}
-          </q-avatar>
-        </q-item-section>
+        <q-item
+          v-for="user in teachers"
+          :key="user._id"
+          class="q-mb-sm"
+          clickable
+          v-ripple
+          @click="createRoom(user)"
+        >
+          <q-item-section avatar>
+            <q-avatar class="shadow-1">
+              <!-- <img :src="`https://cdn.quasar.dev/img/${user.avatar}`" /> -->
+              {{ user.fullName.charAt(0) }}
+            </q-avatar>
+          </q-item-section>
 
-        <q-item-section>
-          <q-item-label>{{ user.fullName }}</q-item-label>
-          <q-item-label caption lines="1">{{ user.faculty.name }}</q-item-label>
-        </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ user.fullName }}</q-item-label>
+            <q-item-label caption lines="1">{{
+              user.faculty.name
+            }}</q-item-label>
+          </q-item-section>
 
-        <q-item-section side>
-          <q-icon name="chat_bubble" color="secondary" />
-        </q-item-section>
-      </q-item>
+          <q-item-section side>
+            <q-icon name="chat_bubble" color="secondary" />
+          </q-item-section>
+        </q-item>
 
-      <q-item-label v-if="students.length" header>Students</q-item-label>
+        <q-item-label v-if="students.length" header>Students</q-item-label>
 
-      <q-item
-        v-for="user in students"
-        :key="user._id"
-        class="q-my-sm"
-        clickable
-        v-ripple
-        @click="createRoom(user)"
-      >
-        <q-item-section avatar>
-          <q-avatar class="shadow-1" color="primary" text-color="white">
-            {{ user.fullName.charAt(0) }}
-          </q-avatar>
-        </q-item-section>
+        <q-item
+          v-for="user in students"
+          :key="user._id"
+          class="q-my-sm"
+          clickable
+          v-ripple
+          @click="createRoom(user)"
+        >
+          <q-item-section avatar>
+            <q-avatar class="shadow-1" color="primary" text-color="white">
+              {{ user.fullName.charAt(0) }}
+            </q-avatar>
+          </q-item-section>
 
-        <q-item-section>
-          <q-item-label>{{ user.fullName }}</q-item-label>
-          <q-item-label caption lines="1">
-            {{ `${user.specialty.name}, ${user.group.number} group` }}
-          </q-item-label>
-        </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ user.fullName }}</q-item-label>
+            <q-item-label caption lines="1">
+              {{ `${user.specialty.name}, ${user.group.number} group` }}
+            </q-item-label>
+          </q-item-section>
 
-        <q-item-section side>
-          <q-icon name="chat_bubble" color="secondary" />
-        </q-item-section>
-      </q-item>
-    </q-list>
+          <q-item-section side>
+            <q-icon name="chat_bubble" color="secondary" />
+          </q-item-section>
+        </q-item>
+      </q-list>
 
-    <div v-else class="users-list--empty" key="list-empty">
-      <q-img
-        style="width: 90%;"
-        src="statics/backgrounds/empty-list.png"
-        spinner-color="white"
-        class="text-center"
-      />
-      <h3 class="text-subtitle1 text-center">
-        We did not find any users
-      </h3>
-    </div>
+      <div v-else class="users-list--empty" key="list-empty">
+        <q-img
+          style="width: 90%;"
+          src="statics/backgrounds/empty-list.png"
+          spinner-color="white"
+          class="text-center"
+        />
+        <h3 class="text-subtitle1 text-center">
+          We did not find any users
+        </h3>
+      </div>
+    </transition>
 
     <q-page-sticky expand position="top">
       <q-toolbar class="bg-primary text-white shadow-2">

@@ -48,6 +48,7 @@
             lazy-rules
             type="email"
             label="Email"
+            @keyup.enter="nextStep"
             :rules="[rules.required, isValidEmail]"
           />
           <q-option-group

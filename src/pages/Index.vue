@@ -11,23 +11,7 @@
       <chats-list-tabs ref="tabs" />
     </q-page-sticky>
 
-    <q-page-sticky position="bottom-right" :offset="fabPos">
-      <q-fab icon="add" direction="left" color="accent">
-        <q-fab-action
-          :to="{ name: 'RecipientSelector' }"
-          color="primary"
-          label="chat"
-          label-position="left"
-        />
-        <q-fab-action
-          v-if="user.userRole === 'teacher'"
-          @click="broadcast"
-          color="primary"
-          label="broadcast"
-          label-position="left"
-        />
-      </q-fab>
-    </q-page-sticky>
+    <main-fab-actions />
   </q-page>
 </template>
 
@@ -39,14 +23,8 @@ export default {
 
   components: {
     ChatsList: () => import('components/ChatsList'),
-    ChatsListTabs: () => import('components/ChatsListTabs')
-  },
-
-  data() {
-    return {
-      fab: false,
-      fabPos: [18, 18]
-    }
+    ChatsListTabs: () => import('components/ChatsListTabs'),
+    MainFabActions: () => import('components/MainFabActions')
   },
 
   computed: {
@@ -60,17 +38,13 @@ export default {
 
   methods: {
     async refresh(done) {
-      await this.$store.dispatch('chats/getUserChats')
+      console.log('REFRESH CHATS')
       done()
     },
 
     handleSwipe({ evt, ...info }) {
       if (!this.allChats.length) return
       this.$refs.tabs.handleSwipe({ evt, ...info })
-    },
-
-    broadcast() {
-      console.log('broadcast message')
     }
   }
 }

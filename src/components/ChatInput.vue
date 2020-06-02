@@ -33,6 +33,7 @@ export default {
   methods: {
     sendMessage() {
       this.message = ''
+      this._newMessage()
     }
   }
 }

@@ -1,11 +1,16 @@
+const { Types } = require('mongoose')
 const { UserModel } = require('./models/user.model')
 const { UniversityModel } = require('./models/university.model')
 const { RoomModel } = require('./models/room.model')
-const { Types } = require('mongoose')
+const { MessageModel } = require('./models/message.model')
 
 module.exports = io => {
   io.on('connection', socket => {
     socket.on('disconnect', () => console.log('user disconnected'))
+
+    socket.on('subscribe', room => socket.join(room))
+
+    socket.on('unsubscribe', room => socket.leave(room))
 
     socket.on('user:sign-up', async function(data, cb) {
       if (!data.email || !data.password) {
@@ -99,7 +104,9 @@ module.exports = io => {
       if (!query) return cb(true, 'invalid query')
 
       try {
-        const recipients = await UserModel.findByName(query).select('-passwordHash')
+        const recipients = await UserModel.findByName(query).select(
+          '-passwordHash'
+        )
         cb(false, recipients)
       } catch (err) {
         cb(true, 'Can not find')
@@ -110,7 +117,9 @@ module.exports = io => {
       if (!id) return cb(true, 'invalid query')
 
       try {
-        const recipients = await UserModel.find({ 'group.id': id }).select('-passwordHash')
+        const recipients = await UserModel.find({ 'group.id': id }).select(
+          '-passwordHash'
+        )
         cb(false, recipients)
       } catch (err) {
         cb(true, 'Can not find')
@@ -121,14 +130,16 @@ module.exports = io => {
       if (!id) return cb(true, 'invalid query')
 
       try {
-        const recipients = await UserModel.find({ 'faculty.id': id }).select('-passwordHash')
+        const recipients = await UserModel.find({ 'faculty.id': id }).select(
+          '-passwordHash'
+        )
         cb(false, recipients)
       } catch (err) {
         cb(true, 'Can not find')
       }
     })
 
-    socket.on('newRoom', async function(data, cb) {
+    socket.on('new:room', async function(data, cb) {
       if (!data.users.length) return cb(true, 'invalidData')
 
       let room = null
@@ -151,20 +162,19 @@ module.exports = io => {
           }
         })
 
-        cb(false, room)
         io.emit('initChats', [room])
+        cb(false, room)
       } catch (err) {
         console.error(err)
         cb(true, err)
       }
     })
 
-    socket.on('subscribe', room => socket.join(room))
-
-    socket.on('unsubscribe', room => socket.leave(room))
-
-    socket.on('newMessage', async function(data, cb) {
+    socket.on('new:message', async function(data, cb) {
       if (!data.text) return cb(true, 'invalidData')
+
+      socket.emit('newMessage', 'hello from server')
+      console.log('newMessage', data)
     })
   })
 }

@@ -1,10 +1,11 @@
 const { Schema, model } = require('mongoose')
-const { userSchema } = require('./user.model')
+// const { userSchema } = require('./user.model')
 
 const messageSchema = new Schema({
   text: String,
-  chatId: Schema.Types.ObjectId,
-  user: userSchema
+  roomId: Schema.Types.ObjectId,
+  userId: Schema.Types.ObjectId,
+  date: Date
 }, { collection: 'messages' })
 
 module.exports = {

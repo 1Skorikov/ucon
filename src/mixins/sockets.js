@@ -8,8 +8,10 @@ function notify(type, message) {
 }
 
 export default {
-  sockets: {
-
+  computed: {
+    _me() {
+      return this.$store.state.user
+    }
   },
 
   methods: {
@@ -121,7 +123,7 @@ export default {
 
     _newRoom(params) {
       return new Promise((resolve, reject) => {
-        this.$socket.emit('newRoom', params, (err, data) => {
+        this.$socket.emit('new:room', params, (err, data) => {
           if (err) {
             notify('negative', data)
             return reject(data)
@@ -142,6 +144,16 @@ export default {
 
           resolve(data)
         })
+      })
+    },
+
+    _newMessage() {
+      return new Promise((resolve, reject) => {
+        const params = {
+          text: 'hello from client'
+        }
+
+        this.$socket.emit('new:message', params)
       })
     }
   }

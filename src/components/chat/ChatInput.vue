@@ -13,6 +13,7 @@
         input-class="chat-input"
         bg-color="white"
         placeholder="Type a message"
+        ref="messageInput"
         @keydown.enter.ctrl="sendMessage"
       />
       <q-btn @click="sendMessage" round flat icon="send" />
@@ -24,6 +25,13 @@
 export default {
   name: 'ChatInput',
 
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
+  },
+
   data() {
     return {
       message: ''
@@ -31,9 +39,15 @@ export default {
   },
 
   methods: {
-    sendMessage() {
+    async sendMessage() {
+      if (!this.message) return
+
+      await this._sendMessage({
+        text: this.message,
+        chatId: this.id
+      })
+
       this.message = ''
-      this._newMessage()
     }
   }
 }

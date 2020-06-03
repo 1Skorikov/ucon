@@ -10,7 +10,7 @@ function notify(type, message) {
 export default {
   computed: {
     _me() {
-      return this.$store.state.user
+      return this.$store.state.user.user
     }
   },
 
@@ -147,13 +147,22 @@ export default {
       })
     },
 
-    _newMessage() {
+    _sendMessage({ text, chatId }) {
       return new Promise((resolve, reject) => {
         const params = {
-          text: 'hello from client'
+          text,
+          chatId,
+          userId: this._me._id
         }
 
-        this.$socket.emit('new:message', params)
+        this.$socket.emit('new:message', params, (err, data) => {
+          if (err) {
+            notify('negative', data)
+            return reject(data)
+          }
+
+          resolve(data)
+        })
       })
     }
   }

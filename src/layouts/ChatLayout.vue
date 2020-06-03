@@ -10,7 +10,7 @@
       <router-view />
     </q-page-container>
 
-    <chat-input />
+    <chat-input :id="id" />
   </q-layout>
 </template>
 
@@ -29,7 +29,7 @@ export default {
 
   components: {
     AppHeader: () => import('components/global/AppHeader'),
-    ChatInput: () => import('components/ChatInput')
+    ChatInput: () => import('components/chat/ChatInput')
   },
 
   computed: {

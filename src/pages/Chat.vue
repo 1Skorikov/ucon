@@ -11,29 +11,11 @@
       }"
       ref="scrollArea"
     >
-      <q-chat-message
-        name="Ivan"
-        name-sanitize
-        :text="['hey, how are you?']"
-        text-sanitize
-        avatar="https://cdn.quasar.dev/img/avatar3.jpg"
-        stamp="7 minutes ago"
-        sent
-        bg-color="amber-7"
-      />
-      <q-chat-message
-        name="Jane"
-        name-sanitize
-        :text="[
-          'doing fine, how r you?',
-          'I just feel like typing a really, really, REALY long message to annoy you...'
-        ]"
-        text-sanitize
-        avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-        size="6"
-        stamp="4 minutes ago"
-        text-color="white"
-        bg-color="primary"
+      <chat-message
+        v-for="(message, i) in messages"
+        :key="i"
+        :message="message"
+        :chatType="chat.type"
       />
     </q-scroll-area>
   </q-page>
@@ -53,10 +35,27 @@ export default {
     }
   },
 
+  components: {
+    ChatMessage: () => import('components/chat/ChatMessage')
+  },
+
   data() {
     return {
       position: 300
     }
+  },
+
+  computed: {
+    messages() {
+      return this.chatMessages(this.id)
+    },
+
+    chat() {
+      return this.chatById(this.id)
+    },
+
+    ...mapGetters('messages', ['chatMessages']),
+    ...mapGetters('chats', ['chatById'])
   },
 
   mounted() {
@@ -80,6 +79,7 @@ export default {
 
 <style lang="scss" scoped>
 .chat-page {
+  padding-top: 15px;
   background-color: #f6f8fa;
 }
 </style>

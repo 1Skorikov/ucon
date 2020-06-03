@@ -22,8 +22,8 @@ export default {
   name: 'PageIndex',
 
   components: {
-    ChatsList: () => import('components/ChatsList'),
-    ChatsListTabs: () => import('components/ChatsListTabs'),
+    ChatsList: () => import('components/chat/ChatsList'),
+    ChatsListTabs: () => import('components/chat/ChatsListTabs'),
     MainFabActions: () => import('components/MainFabActions')
   },
 

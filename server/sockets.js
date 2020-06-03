@@ -8,9 +8,15 @@ module.exports = io => {
   io.on('connection', socket => {
     socket.on('disconnect', () => console.log('user disconnected'))
 
-    socket.on('subscribe', room => socket.join(room))
+    socket.on('subscribe', room => {
+      console.log('join', room)
+      socket.join(room)
+    })
 
-    socket.on('unsubscribe', room => socket.leave(room))
+    socket.on('unsubscribe', room => {
+      console.log('leave')
+      socket.leave(room)
+    })
 
     socket.on('user:sign-up', async function(data, cb) {
       if (!data.email || !data.password) {
@@ -148,8 +154,6 @@ module.exports = io => {
         const user = await UserModel.findById(data.me)
         const interlocutor = await UserModel.findById(data.interlocutor)
 
-        console.log('new room', data, user, interlocutor)
-
         room = await RoomModel.create({
           ...data,
           interlocutor,
@@ -171,10 +175,21 @@ module.exports = io => {
     })
 
     socket.on('new:message', async function(data, cb) {
-      if (!data.text) return cb(true, 'invalidData')
+      if (!data.text || !data.chatId || !data.userId) return cb(true, 'invalidData')
 
-      socket.emit('newMessage', 'hello from server')
-      console.log('newMessage', data)
+      try {
+        const user = await UserModel.findById(data.userId)
+        io.in(data.chatId).emit('newMessage', {
+          chatId: data.chatId,
+          text: data.text + '. From server',
+          user,
+          date: new Date()
+        })
+        cb(false, 'success')
+      } catch (err) {
+        console.error(err)
+        cb(true, err)
+      }
     })
   })
 }

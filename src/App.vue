@@ -11,6 +11,12 @@ import { mapState } from 'vuex'
 export default {
   name: 'App',
 
+  preFetch({ store, redirect, currentRoute }) {
+    if (currentRoute.name !== 'Chats') {
+      redirect('/')
+    }
+  },
+
   mixins: [sockets],
 
   async created() {

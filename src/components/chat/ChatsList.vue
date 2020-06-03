@@ -22,7 +22,7 @@ export default {
   name: 'ChatsList',
 
   components: {
-    ChatsListItem: () => import('components/ChatsListItem')
+    ChatsListItem: () => import('components/chat/ChatsListItem')
   },
 
   computed: {

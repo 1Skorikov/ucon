@@ -1,9 +1,9 @@
-function SA_message({ commit }, payload) {
-  commit('addMessage', payload)
+function SA_newMessage({ commit }, payload) {
+  commit('appendMessage', payload)
 }
 
 function SA_initMessages({ commit }, payload) {
   commit('initMessages', payload)
 }
 
-export { SA_message, SA_initMessages }
+export { SA_newMessage, SA_initMessages }

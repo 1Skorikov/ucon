@@ -147,11 +147,11 @@ export default {
       })
     },
 
-    _sendMessage({ text, chatId }) {
+    _sendMessage({ text, roomId }) {
       return new Promise((resolve, reject) => {
         const params = {
           text,
-          chatId,
+          roomId,
           userId: this._me._id
         }
 
@@ -161,6 +161,20 @@ export default {
             return reject(data)
           }
 
+          resolve(data)
+        })
+      })
+    },
+
+    _getMessages(roomId) {
+      return new Promise((resolve, reject) => {
+        this.$socket.emit('get:messages', roomId, (err, data) => {
+          if (err) {
+            notify('negative', data)
+            return reject(data)
+          }
+
+          this.$store.commit('messages/initMessages', data)
           resolve(data)
         })
       })

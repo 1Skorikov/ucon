@@ -1,30 +1,5 @@
 <template>
-  <div class="chat-message">
-    <!-- <q-chat-message
-      name="Ivan"
-      name-sanitize
-      :text="['hey, how are you?']"
-      text-sanitize
-      avatar="https://cdn.quasar.dev/img/avatar3.jpg"
-      stamp="7 minutes ago"
-      sent
-      bg-color="amber-7"
-    />
-    <q-chat-message
-      name="Jane"
-      name-sanitize
-      :text="[
-        'doing fine, how r you?',
-        'I just feel like typing a really, really, REALY long message to annoy you...'
-      ]"
-      text-sanitize
-      avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-      size="6"
-      stamp="4 minutes ago"
-      text-color="white"
-      bg-color="primary"
-    /> -->
-
+  <div class="chat-message" style="width: 100%;">
     <q-chat-message
       :name="messageInfo.senderName"
       name-sanitize
@@ -34,7 +9,14 @@
       :sent="messageInfo.sent"
     >
       <template v-slot:avatar v-if="messageInfo.avatar">
-        <q-avatar size="48px" class="shadow-1">
+        <q-avatar
+          class="q-message-avatar shadow-1"
+          :class="{
+            'q-message-avatar--received': !messageInfo.sent,
+            'q-message-avatar--sent': messageInfo.sent
+          }"
+          size="48px"
+        >
           <span>{{ messageInfo.avatar }}</span>
         </q-avatar>
       </template>
@@ -44,6 +26,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { messageTime } from '../../helpers.js'
 
 export default {
   name: 'ChatMessage',
@@ -70,11 +53,19 @@ export default {
           senderName: null,
           avatar: null,
           sent: this.me._id === msg.user._id,
-          time: msg.date
+          time: messageTime(msg.date)
+        }
+      } else if (this.chatType === 'group') {
+        return {
+          text: msg.text,
+          senderName: msg.user.fullName,
+          avatar: msg.user.initials,
+          sent: this.me._id === msg.user._id,
+          time: messageTime(msg.date)
         }
       }
 
-      return {}
+      return msg
     },
 
     ...mapGetters('user', ['me'])

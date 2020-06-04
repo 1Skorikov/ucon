@@ -273,7 +273,7 @@ export default {
       this.loading = false
     },
 
-    onSubmit(val) {
+    async onSubmit(val) {
       const isStudent = this.form.userRole === 'student'
       const params = {
         universityId: this.form.university.id,
@@ -296,7 +296,9 @@ export default {
         password: this.form.password
       }
 
-      this._signUp(params)
+      this.$q.loading.show()
+      await this._signUp(params)
+      this.$q.loading.hide()
     },
 
     passwordsAreEqual(val) {

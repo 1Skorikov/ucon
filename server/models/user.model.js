@@ -23,7 +23,7 @@ userSchema.virtual('password')
 userSchema.virtual('name')
   .set(function(name) {
     this.fullName = name
-    this.initials = name.split(' ').map(e => e.charAt(0)).join('.')
+    this.initials = name.split(' ').map(e => e.charAt(0)).join('')
   })
   .get(function() { return this.fullName })
 

@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr fFf">
+  <q-layout class="chat-layout" view="hHh Lpr fFf">
     <app-header :title="chatTitle" :reveal="false">
       <template #left>
         <q-btn dense flat round icon="arrow_back_ios" @click="$router.back()" />
@@ -7,7 +7,19 @@
     </app-header>
 
     <q-page-container>
-      <router-view />
+      <q-scroll-area
+        class="q-pr-sm q-pl-sm"
+        style="height: calc(100vh - 100px); width: 100%;"
+        :thumb-style="{
+          right: '2px',
+          borderRadius: '5px',
+          width: '4px',
+          opacity: 0.5
+        }"
+        ref="scrollArea"
+      >
+        <router-view />
+      </q-scroll-area>
     </q-page-container>
 
     <chat-input :id="id" />
@@ -16,6 +28,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { scroll } from 'quasar'
 
 export default {
   name: 'Chat',
@@ -38,10 +51,34 @@ export default {
     },
 
     chatTitle() {
-      return this.chat.interlocutor.fullName
+      return this.chat.type === 'private' ? this.chat.interlocutor.fullName : this.chat.name
     },
 
     ...mapGetters('chats', ['chatById'])
+  },
+
+  mounted() {
+    this.$nextTick(this.setScrollPosition)
+  },
+
+  methods: {
+    setScrollPosition(smooth = false) {
+      const area = this.$refs.scrollArea
+      const scrollTarget = area.getScrollTarget()
+      area.setScrollPosition(scrollTarget.scrollHeight, smooth ? 500 : 0)
+    }
+  },
+
+  sockets: {
+    newMessage() {
+      this.setScrollPosition(true)
+    }
   }
 }
 </script>
+
+<style lang="scss">
+.chat-layout {
+  background-color: #f6f8fa;
+}
+</style>

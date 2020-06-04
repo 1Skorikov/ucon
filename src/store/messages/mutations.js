@@ -3,8 +3,6 @@ import Vue from 'vue'
 function initMessages(state, data) {
   const ids = data.map(e => e._id)
 
-  console.log('initMessages')
-
   state.messages = [
     ...state.messages
       .filter(e => !ids.includes(e._id)),
@@ -13,9 +11,7 @@ function initMessages(state, data) {
 }
 
 function appendMessage(state, message = {}) {
-  // uncomment after cordova functionality
-  // const index = state.messages.findIndex(e => e._id === message._id)
-  const index = -1
+  const index = state.messages.findIndex(e => e._id === message._id)
 
   console.log('appendMessage')
 

@@ -5,6 +5,10 @@ const roomSchema = new Schema({
   name: String,
   type: String,
   unreadCount: Number,
+  groupNumber: {
+    type: Number,
+    unique: true
+  },
   lastMessage: {
     text: String,
     time: Date,

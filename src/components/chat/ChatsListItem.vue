@@ -1,7 +1,7 @@
 <template>
   <q-item clickable v-ripple @click="openChat">
     <q-item-section avatar>
-      <q-avatar size="48px" class="shadow-1">
+      <q-avatar size="48px" class="shadow-1 bg-primary text-white text-bold">
         <span>{{ chatInfo.initials }}</span>
       </q-avatar>
     </q-item-section>
@@ -45,18 +45,36 @@ export default {
   computed: {
     chatInfo() {
       const lastMessage = this.chat.lastMessage
-      const formattedString = date.formatDate(lastMessage.time, 'hh:mm')
+      const formattedString = lastMessage ? date.formatDate(lastMessage.time, 'hh:mm') : null
+      const msg = lastMessage
+        ? {
+          text: this.me._id === lastMessage.user._id
+            ? `Me: ${lastMessage.text}`
+            : this.chat.type === 'group'
+              ? `${lastMessage.user.fullName}: ${lastMessage.text}`
+              : lastMessage.text,
+          time: formattedString,
+          user: lastMessage.user
+        }
+        : {
+          text: '',
+          time: '',
+          user: null
+        }
 
       if (this.chat.type === 'private') {
         return {
           fullName: this.chat.interlocutor.fullName,
-          lastMessage: {
-            text: lastMessage.text,
-            time: formattedString,
-            user: lastMessage.user
-          },
           unreadCount: this.chat.unreadCount || 0,
-          initials: this.chat.interlocutor.initials
+          initials: this.chat.interlocutor.initials,
+          lastMessage: msg
+        }
+      } else if (this.chat.type === 'group') {
+        return {
+          fullName: this.chat.groupNumber,
+          unreadCount: this.chat.unreadCount || 0,
+          initials: this.chat.groupNumber,
+          lastMessage: msg
         }
       }
 

@@ -44,7 +44,7 @@ export default {
 
       await this._sendMessage({
         text: this.message,
-        chatId: this.id
+        roomId: this.id
       })
 
       this.message = ''

@@ -1,7 +1,3 @@
-export function updateUserChats(state, chats) {
-  state.chats = chats
-}
-
 export function initChats(state, payload) {
   if (!payload.length) {
     state.chats = []
@@ -13,4 +9,10 @@ export function initChats(state, payload) {
     ...state.chats.filter(c => !ids.includes(c._id)),
     ...payload
   ]
+}
+
+export function updateLastMessage(state, data) {
+  const chat = state.chats.find(e => e._id === data._id)
+  if (!chat) return
+  chat.lastMessage = data.lastMessage
 }

@@ -12,7 +12,7 @@
       </q-item-label>
 
       <q-item-label caption>
-        {{ chatInfo.lastMessage.text }}
+        {{ chatInfo.lastMessage.text | truncateText }}
       </q-item-label>
     </q-item-section>
 
@@ -39,6 +39,12 @@ export default {
     chat: {
       type: Object,
       required: true
+    }
+  },
+
+  filters: {
+    truncateText(value) {
+      return `${value.substring(0, 70)} ${value.length > 70 ? '...' : ''}`
     }
   },
 

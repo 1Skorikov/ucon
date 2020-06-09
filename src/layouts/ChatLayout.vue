@@ -79,6 +79,6 @@ export default {
 
 <style lang="scss">
 .chat-layout {
-  background-color: #f6f8fa;
+  background-color: #f2f2f3;
 }
 </style>

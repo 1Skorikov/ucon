@@ -297,8 +297,11 @@ export default {
       }
 
       this.$q.loading.show()
-      await this._signUp(params)
-      this.$q.loading.hide()
+      try {
+        await this._signUp(params)
+      } finally {
+        this.$q.loading.hide()
+      }
     },
 
     passwordsAreEqual(val) {

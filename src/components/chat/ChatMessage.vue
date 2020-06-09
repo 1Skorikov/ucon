@@ -1,12 +1,20 @@
 <template>
-  <div class="chat-message" style="width: 100%;">
+  <div class="chat-message q-pr-sm q-pl-sm" style="width: 100%;">
     <q-chat-message
+      v-if="message.type === 'info'"
+      :label="message.text"
+      class="text-bold"
+    />
+
+    <q-chat-message
+      v-else
       :name="messageInfo.senderName"
-      name-sanitize
       :text="[messageInfo.text]"
-      text-sanitize
       :stamp="messageInfo.time"
       :sent="messageInfo.sent"
+      name-sanitize
+      text-sanitize
+      bg-color="white"
     >
       <template v-slot:avatar v-if="messageInfo.avatar">
         <q-avatar
@@ -59,7 +67,7 @@ export default {
         return {
           text: msg.text,
           senderName: msg.user.fullName,
-          avatar: msg.user.initials,
+          avatar: this.isMyMessage ? null : msg.user.initials,
           sent: this.me._id === msg.user._id,
           time: messageTime(msg.date)
         }
@@ -68,10 +76,35 @@ export default {
       return msg
     },
 
+    isMyMessage() {
+      return this.message.user._id === this.me._id
+    },
+
     ...mapGetters('user', ['me'])
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+.q-message-label {
+  width: 70%;
+  margin: 8px auto;
+  border-radius: 10px;
+}
+
+.q-message-name {
+  padding: 8px 8px 0;
+  font-weight: 500;
+  border-radius: 4px 4px 0 0;
+  background-color: #fff;
+
+  &--received {
+    background-color: #fff;
+  }
+}
+
+.q-message-text {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
 </style>

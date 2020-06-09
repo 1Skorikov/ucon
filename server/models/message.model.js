@@ -5,7 +5,8 @@ const messageSchema = new Schema({
   text: String,
   roomId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
-  date: Date
+  date: Date,
+  type: String
 }, { collection: 'messages' })
 
 module.exports = {

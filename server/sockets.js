@@ -27,10 +27,15 @@ module.exports = io => {
       try {
         const university = await UniversityModel.findById(data.universityId)
         const user = await UserModel.create({ ...data, university })
-        const studentRoom = await RoomModel.exists({ groupNumber: data.group.number })
+        let message = null
+        let studentRoom = null
         let room = null
 
-        if (!studentRoom) {
+        if (data.group) {
+          studentRoom = await RoomModel.exists({ groupNumber: data.group.number })
+        }
+
+        if (!studentRoom && user.userRole === 'student') {
           room = await RoomModel.create({
             name: data.group.number,
             type: 'group',
@@ -38,47 +43,62 @@ module.exports = io => {
             lastMessage: {
               text: `${user.fullName} joined to group!`,
               time: new Date(),
-              user
+              user,
+              type: 'info'
             },
             groupNumber: data.group.number,
             usersIds: [user._id],
             users: [user]
           })
-        } else {
+        } else if (user.userRole === 'student') {
           room = await RoomModel.findOne({ groupNumber: data.group.number })
           room.usersIds.push(user._id)
           room.users.push(user)
-          room.lastMessage = {
+
+          message = await MessageModel.create({
             text: `${user.fullName} joined to group!`,
-            time: new Date(),
+            roomId: room._id,
+            userId: user._id,
+            date: new Date(),
+            type: 'info'
+          })
+
+          room.lastMessage = {
+            text: message.text,
+            time: message.date,
+            type: message.type,
             user
           }
+
           await room.save()
         }
 
         cb(false, user)
         socket.emit('initUser', user)
-        socket.emit('initChats', [room])
+        if (room) socket.emit('initChats', [room])
       } catch (err) {
         console.error(err)
         cb(true, err)
       }
     })
 
-    socket.on('user:sign-in', (data, cb) => {
+    socket.on('user:sign-in', async function(data, cb) {
       if (!data.email || !data.password) {
         return cb(true, 'Invalid data')
       }
 
-      UserModel.findOne({ email: data.email })
-        .then(user => {
-          if (!user || !user.checkPassword(data.password)) {
-            return cb(true, 'Invalid data')
-          }
-          cb(false, user)
-          socket.emit('initUser', user)
-        })
-        .catch(err => cb(true, err))
+      try {
+        const user = await UserModel.findOne({ email: data.email })
+
+        if (!user || !user.checkPassword(data.password)) {
+          return cb(true, 'Incorrect data')
+        }
+
+        cb(false, user)
+        socket.emit('initUser', user)
+      } catch (err) {
+        return cb(true, err)
+      }
     })
 
     socket.on('get:universities', async function(cb) {
@@ -181,17 +201,33 @@ module.exports = io => {
         const user = await UserModel.findById(data.me)
         const interlocutor = await UserModel.findById(data.interlocutor)
 
-        room = await RoomModel.create({
+        room = new RoomModel({
           ...data,
           interlocutor,
           usersIds: data.users,
-          users: [user, interlocutor],
-          lastMessage: {
-            text: `${user.fullName} created a chat`,
-            time: new Date(),
-            user
-          }
+          users: [user, interlocutor]
         })
+
+        const message = await MessageModel.create({
+          text: `${user.fullName} created a chat`,
+          roomId: room._id,
+          userId: user._id,
+          date: new Date(),
+          type: 'info'
+        })
+
+        console.log('ROOM', room)
+        console.log('message', message)
+
+        room.lastMessage = {
+          ...message._doc,
+          time: message.date,
+          user
+        }
+
+        console.log('ROOM 2', room)
+
+        await room.save()
 
         io.emit('initChats', [room])
         cb(false, room)
@@ -209,6 +245,7 @@ module.exports = io => {
           text,
           roomId,
           userId,
+          type: 'text',
           date: new Date()
         })
         const user = await UserModel.findById(userId)
@@ -217,6 +254,7 @@ module.exports = io => {
           lastMessage: {
             text,
             time: message.date,
+            type: message.type,
             user
           }
         }, { new: true })

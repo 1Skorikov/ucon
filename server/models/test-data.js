@@ -25,8 +25,14 @@ const universities = [
       {
         name: 'Economics',
         specialties: [
-          { name: 'International economics' },
-          { name: 'Business Enterprise Economics' }
+          {
+            name: 'International economics',
+            groups: [{ number: 601 }, { number: 602 }]
+          },
+          {
+            name: 'Business Enterprise Economics',
+            groups: [{ number: 701 }, { number: 702 }]
+          }
         ]
       }
     ]

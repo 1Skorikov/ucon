@@ -147,11 +147,12 @@ export default {
       })
     },
 
-    _sendMessage({ text, roomId }) {
+    _sendMessage({ text, roomId, groups }) {
       return new Promise((resolve, reject) => {
         const params = {
           text,
           roomId,
+          groups,
           userId: this._me._id
         }
 
@@ -165,6 +166,25 @@ export default {
         })
       })
     },
+
+    // _broadcastMessage({  }) {
+    //   return new Promise((resolve, reject) => {
+    //     const params = {
+    //       text,
+    //       roomId,
+    //       userId: this._me._id
+    //     }
+
+    //     this.$socket.emit('new:message', params, (err, data) => {
+    //       if (err) {
+    //         notify('negative', data)
+    //         return reject(data)
+    //       }
+
+    //       resolve(data)
+    //     })
+    //   })
+    // },
 
     _getMessages(roomId) {
       return new Promise((resolve, reject) => {

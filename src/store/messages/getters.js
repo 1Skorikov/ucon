@@ -1,6 +1,6 @@
 const chatMessages = state => id => {
   return state.messages
-    .filter(msg => msg.roomId === id)
+    .filter(msg => msg.roomIds.includes(id))
 }
 
 export { chatMessages }

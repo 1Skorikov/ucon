@@ -38,13 +38,25 @@ export default {
 
   methods: {
     async refresh(done) {
-      console.log('REFRESH CHATS')
+      // await this.fetchChats()
+      console.log('refresh')
       done()
     },
 
     handleSwipe({ evt, ...info }) {
       if (!this.allChats.length) return
       this.$refs.tabs.handleSwipe({ evt, ...info })
+    },
+
+    async fetchChats() {
+      const userId = this.$q.localStorage.getItem('userId')
+      if (!userId) return
+
+      try {
+        await this._getChats(userId)
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
 }

@@ -5,19 +5,17 @@ const roomSchema = new Schema({
   name: String,
   type: String,
   unreadCount: Number,
-  groupNumber: {
-    type: Number,
-    unique: true
-  },
+  groupNumber: Schema.Types.Mixed,
   lastMessage: {
     text: String,
     time: Date,
-    user: Object
+    user: Object,
+    type: String
   },
   usersIds: Array,
   users: [userSchema],
   interlocutor: userSchema
-}, { collection: 'rooms' })
+}, { collection: 'rooms', typeKey: '$type' })
 
 module.exports = {
   RoomModel: model('Room', roomSchema),

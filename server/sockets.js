@@ -36,20 +36,31 @@ module.exports = io => {
         }
 
         if (!studentRoom && user.userRole === 'student') {
-          room = await RoomModel.create({
+          room = new RoomModel({
             name: data.group.number,
             type: 'group',
             unreadCount: 0,
-            lastMessage: {
-              text: `${user.fullName} joined to group!`,
-              time: new Date(),
-              user,
-              type: 'info'
-            },
             groupNumber: data.group.number,
             usersIds: [user._id],
             users: [user]
           })
+
+          message = await MessageModel.create({
+            text: `${user.fullName} joined to group!`,
+            roomIds: [room._id],
+            userId: user._id,
+            date: new Date(),
+            type: 'info'
+          })
+
+          room.lastMessage = {
+            text: message.text,
+            time: message.date,
+            type: message.type,
+            user
+          }
+
+          await room.save()
         } else if (user.userRole === 'student') {
           room = await RoomModel.findOne({ groupNumber: data.group.number })
           room.usersIds.push(user._id)
@@ -57,7 +68,7 @@ module.exports = io => {
 
           message = await MessageModel.create({
             text: `${user.fullName} joined to group!`,
-            roomId: room._id,
+            roomIds: [room._id],
             userId: user._id,
             date: new Date(),
             type: 'info'
@@ -75,7 +86,10 @@ module.exports = io => {
 
         cb(false, user)
         socket.emit('initUser', user)
-        if (room) socket.emit('initChats', [room])
+        if (room) {
+          io.in('all').emit('updateLastMessage', [room])
+          socket.emit('initChats', [room])
+        }
       } catch (err) {
         console.error(err)
         cb(true, err)
@@ -153,6 +167,31 @@ module.exports = io => {
       }
     })
 
+    socket.on('get:messages', async function(roomId, cb) {
+      if (!roomId) return cb(true, 'Expected room id')
+
+      try {
+        const messages = await MessageModel.find({
+          roomIds: roomId
+        })
+        const messagesWithUser = []
+
+        for (let i = 0; i < messages.length; i++) {
+          const msg = messages[i]
+          const user = await UserModel.findById(msg.userId)
+          messagesWithUser.push({
+            ...msg._doc,
+            user
+          })
+        }
+
+        cb(false, messagesWithUser)
+      } catch (err) {
+        console.error(err)
+        cb(true, err)
+      }
+    })
+
     socket.on('search:recipient', async function(query, cb) {
       if (!query) return cb(true, 'invalid query')
 
@@ -201,31 +240,29 @@ module.exports = io => {
         const user = await UserModel.findById(data.me)
         const interlocutor = await UserModel.findById(data.interlocutor)
 
+        console.log(user, interlocutor)
+
         room = new RoomModel({
           ...data,
           interlocutor,
           usersIds: data.users,
+          groupNumber: null,
           users: [user, interlocutor]
         })
 
         const message = await MessageModel.create({
           text: `${user.fullName} created a chat`,
-          roomId: room._id,
+          roomIds: [room._id],
           userId: user._id,
           date: new Date(),
           type: 'info'
         })
-
-        console.log('ROOM', room)
-        console.log('message', message)
 
         room.lastMessage = {
           ...message._doc,
           time: message.date,
           user
         }
-
-        console.log('ROOM 2', room)
 
         await room.save()
 
@@ -237,57 +274,57 @@ module.exports = io => {
       }
     })
 
-    socket.on('new:message', async function({ text, roomId, userId }, cb) {
-      if (!text || !roomId || !userId) return cb(true, 'invalidData')
+    socket.on('new:message', async function({ text, roomId, userId, groups }, cb) {
+      if (!text || !userId) return cb(true, 'invalidData')
+
+      const user = await UserModel.findById(userId)
+      let groupsNumbers = null
+      let rooms = null
+      let message = null
 
       try {
-        const message = await MessageModel.create({
-          text,
-          roomId,
-          userId,
-          type: 'text',
-          date: new Date()
-        })
-        const user = await UserModel.findById(userId)
+        if (groups) {
+          groupsNumbers = groups.map(el => el.number)
+          rooms = await RoomModel.find({ groupNumber: { $in: groupsNumbers } })
 
-        const chat = await RoomModel.findOneAndUpdate({ _id: roomId }, {
-          lastMessage: {
+          message = await MessageModel.create({
             text,
-            time: message.date,
-            type: message.type,
-            user
-          }
-        }, { new: true })
-
-        io.in(roomId).emit('newMessage', {
-          ...message._doc,
-          user
-        })
-        io.in('all').emit('updateLastMessage', chat)
-        cb(false, 'success')
-      } catch (err) {
-        console.error(err)
-        cb(true, err)
-      }
-    })
-
-    socket.on('get:messages', async function(roomId, cb) {
-      if (!roomId) return cb(true, 'Expected room id')
-
-      try {
-        const messages = await MessageModel.find({ roomId })
-        const messagesWithUser = []
-
-        for (let i = 0; i < messages.length; i++) {
-          const msg = messages[i]
-          const user = await UserModel.findById(msg.userId)
-          messagesWithUser.push({
-            ...msg._doc,
-            user
+            roomIds: rooms.map(el => el._id),
+            userId,
+            type: 'text',
+            date: new Date()
+          })
+        } else {
+          message = await MessageModel.create({
+            text,
+            roomIds: [roomId],
+            userId,
+            type: 'text',
+            date: new Date()
           })
         }
 
-        cb(false, messagesWithUser)
+        const chats = await RoomModel.updateMany(
+          { _id: roomId || rooms.map(el => el._id) },
+          {
+            lastMessage: {
+              text,
+              time: message.date,
+              type: message.type,
+              user
+            }
+          }, { new: true }
+        )
+        const updatedChats = await RoomModel.find({ _id: roomId || rooms.map(el => el._id) })
+
+        if (roomId) {
+          io.in(roomId).emit('newMessage', {
+            ...message._doc,
+            user
+          })
+        }
+        io.in('all').emit('updateLastMessage', updatedChats)
+        cb(false, 'success')
       } catch (err) {
         console.error(err)
         cb(true, err)

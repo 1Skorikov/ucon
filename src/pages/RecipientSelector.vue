@@ -129,7 +129,8 @@ export default {
     teachers() {
       return this.searchResults.filter(e => e.userRole === 'teacher' && e._id !== this.me._id)
     },
-    ...mapGetters('user', ['me'])
+    ...mapGetters('user', ['me']),
+    ...mapGetters('chats', ['userChats'])
   },
 
   watch: {
@@ -169,7 +170,22 @@ export default {
       }
     },
 
+    goToChat(id) {
+      return this.$router.push({
+        name: 'Chat',
+        params: { id }
+      })
+    },
+
     async createRoom(user) {
+      const existingChat = this.userChats('all')
+        .filter(el => el.type === 'private')
+        .find(el => el.interlocutor._id === user._id)
+
+      if (existingChat) {
+        return this.goToChat(existingChat._id)
+      }
+
       this.$q.loading.show()
 
       try {
@@ -180,12 +196,7 @@ export default {
           users: [this.me._id, user._id]
         })
 
-        this.$router.push({
-          name: 'Chat',
-          params: {
-            id: newRoom._id
-          }
-        })
+        this.goToChat(newRoom._id)
       } catch (err) {
         console.error(err)
       }

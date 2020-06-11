@@ -51,6 +51,10 @@ export default {
   computed: {
     chatInfo() {
       const lastMessage = this.chat.lastMessage
+      const interlocutor = this.chat.users.find(user => {
+        return user._id !== this.me._id
+      })
+
       const formattedString = lastMessage ? date.formatDate(lastMessage.time, 'hh:mm') : null
       const msg = lastMessage
         ? {
@@ -68,11 +72,15 @@ export default {
           user: null
         }
 
+      if (lastMessage.type === 'info') {
+        msg.text = lastMessage.text
+      }
+
       if (this.chat.type === 'private') {
         return {
-          fullName: this.chat.interlocutor.fullName,
+          fullName: interlocutor.fullName,
           unreadCount: this.chat.unreadCount || 0,
-          initials: this.chat.interlocutor.initials,
+          initials: interlocutor.initials,
           lastMessage: msg
         }
       } else if (this.chat.type === 'group') {

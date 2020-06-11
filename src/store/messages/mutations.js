@@ -13,8 +13,6 @@ function initMessages(state, data) {
 function appendMessage(state, message = {}) {
   const index = state.messages.findIndex(e => e._id === message._id)
 
-  console.log('appendMessage')
-
   if (index === -1) {
     state.messages.push(message)
   } else {

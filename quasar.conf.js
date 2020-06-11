@@ -57,7 +57,9 @@ module.exports = configure(function(/* ctx */) {
         'Notify',
         'LocalStorage',
         'LoadingBar',
-        'Loading'
+        'Loading',
+        'BottomSheet',
+        'Dialog'
       ]
     },
 

@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose')
 
 const messageSchema = new Schema({
   text: String,
-  roomId: Schema.Types.ObjectId,
+  roomIds: [Schema.Types.ObjectId],
   userId: Schema.Types.ObjectId,
   date: Date,
   type: String

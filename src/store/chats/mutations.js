@@ -9,7 +9,7 @@ export function initChats(state, payload) {
   const myChats = payload.filter(el => el.usersIds.includes(LocalStorage.getItem('userId')))
   const ids = myChats.map(e => e._id)
 
-  console.log('myChats', myChats)
+  console.log()
 
   state.chats = [
     ...state.chats.filter(c => !ids.includes(c._id)),

@@ -19,7 +19,6 @@ const userChats = (state, getters, rootState, rootGetters) => (filterBy = 'all')
   }
 
   return chats.slice().sort((a, b) => {
-    console.log(123, a.lastMessage.time)
     return new Date(b.lastMessage.time) - new Date(a.lastMessage.time)
   })
 }
